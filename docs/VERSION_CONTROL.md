@@ -22,9 +22,12 @@ create a merge conflict.
 
 # Git workflow
 
-Go through this workflow whenever you're ready to start a new set of changes or a new feature.
-Try to split up your branches into unique features to avoid creating too many. Try to stick
-to working on that particular feature in its branch. This helps prevent merge conflicts.
+There are four guides below to guide you through the process of using Git/Github effectively.
+
+Branch guidelines:
+* Try to split up your branches into unique features to avoid creating too many. 
+* Try to stick to working on one particular feature in its branch.
+    * This helps reduce merge conflicts.
 
 Some examples of the scope of one branch:
 - A branch to create a page of the website
@@ -32,7 +35,7 @@ Some examples of the scope of one branch:
 - A branch to improve the styling of the website
 - A branch to add the login feature (frontend/backend)
 
-**WHEN BEGINNING A NEW TASK:**
+## Beginning a new task/feature
 1) In GitHub:
 	- Go to the ["Branches"](https://github.com/ArmandoCtrs/Turbo-Recipe/branches)
       page and select "New branch".
@@ -45,14 +48,14 @@ Some examples of the scope of one branch:
 Now, you have checked out your branch, which is currently a copy of the main branch.
 You can start making your changes in this branch and it won't affect the main code.
 
-**WHEN ADDING CHANGES:**
+## Developing / making changes
 1) Run `git commit -m "<Description of changes>"`
     - Run this incrementally as you finish up significant sub-parts of the work.
     - You will probably commit more than once in one session of programming.
 2) Run `git push` occasionally.
     - A good rule of thumb is: every time you stop working, push your commits.
 
-**WHEN FINISHED WITH YOUR CHANGES:**
+## When finished with your task/feature
 1) Make sure all changes are pushed using `git push`.
 2) Go to the ["Pull requests"](https://github.com/ArmandoCtrs/Turbo-Recipe/pulls) 
    page and select "New pull request".
@@ -67,7 +70,7 @@ You can start making your changes in this branch and it won't affect the main co
 4) If somebody suggests changes to your PR, make those changes, and test them.
 5) Once your PR is approved by somebody else, click "Merge".
 
-**HANDLING MERGE CONFLICTS:**
+## Resolving merge conflicts
 1) Commit all your changes to your branch to prevent losing any work.
 2) Run `git checkout main` and `git pull` to get all the new changes to the `main` branch.
 3) Go back to your branch with `git checkout <BRANCH_NAME>`.

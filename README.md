@@ -13,9 +13,9 @@ Features:
 
 ## Running
 
-### Development mode
+**Note:** For more details, refer to `/docs/DEVELOPMENT.md`.
 
-Dev mode is for when you want to make changes to the code and see them update in real-time in the browser.
+### Development mode
 
 To run the backend dev server:
 
@@ -30,9 +30,6 @@ npm run dev:client
 ```
 
 ### Production mode
-
-Production mode is for real-life demonstrations of the code. When we deploy the app,
-it will use production mode.
 
 The production server will run both the backend API, as well as host the web pages.
 

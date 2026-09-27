@@ -59,7 +59,7 @@ npm run dev:client
 
 Then, the relevant endpoints will be:
 * API: [`http://localhost:3001/api/`](http://localhost:3001/api/)
-* Web: [`http://localhost:`**`5173/`**](http://localhost:5173/)
+* Web: [<code>http://localhost:<b>5173</b>/</code>](http://localhost:5173/)
 
 ### Production mode
 
@@ -72,7 +72,7 @@ npm run start
 
 Then, the relevant endpoints will be:
 * API: [`http://localhost:3001/api/`](http://localhost:3001/api/)
-* Web: [`http://localhost:**`3001/`**](http://localhost:3001/)
+* Web: [<code>http://localhost:<b>3001</b>/</code>](http://localhost:3001/)
 
 **Note:** In production mode, there is only one server, so the web address is at port `:3001`,
 not `:5173`.
