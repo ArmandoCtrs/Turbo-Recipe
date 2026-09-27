@@ -1,16 +1,16 @@
 {
-  "private": true,
-  "workspaces": [
-    "client",
-    "server"
-  ],
-  "scripts": {
-    "dev:client": "npm run dev -w client",
-    "dev:server": "npm run dev -w server",
-    "build": "npm run build -w client",
-    "start": "npm run start -w server"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
-  }
+    "private": true,
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "dev:client": "npm run dev -w client",
+        "dev:server": "npm run dev -w server -- --dev",
+        "build": "npm run build -w client",
+        "start": "npm run start -w server"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
+    }
 }
