@@ -1,14 +1,11 @@
-# Development guide
+# Version control
 
-You will need to install the following tools:
-- Node (https://nodejs.org/en/download/)
-	- NPM, the package manager for Node, should be included if you use the installer.
-- Git for Windows (https://git-scm.com/install/windows)
-    - Or, if working on Mac or Linux, install the appropriate version of Git.
+One of the primary features of version control is to allow a team to work together on the same
+repository at the same time. Git is the most common version control software.
 
-## General development workflow
+# General workflow
 
-At a high level, here's how development will work:
+At a high level, here's how our Git workflow will work:
 
 1) For every new major feature, you'll create a branch, where all code for that feature will live.
 2) Once your work is finished, you'll make a pull request (PR) ask somebody to review it.
@@ -23,7 +20,7 @@ create a merge conflict.
 - This "rewrites history" to pretend that X's changes were already in `main` before you
   made your branch.
 
-## Git workflow
+# Git workflow
 
 Go through this workflow whenever you're ready to start a new set of changes or a new feature.
 Try to split up your branches into unique features to avoid creating too many. Try to stick
