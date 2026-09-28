@@ -31,13 +31,10 @@ Here are some pros and cons:
 
 ## Running the app
 
-To start, use the `cd` command to enter the directory of the project, wherever it is located
-on your machine.
-
-Example:
-
+To start, `cd` into the app folder, and install packages using `npm`:
 ```sh
-cd /projects/Turbo-Recipe
+cd Turbo-Recipe
+npm install
 ```
 
 ### Development mode

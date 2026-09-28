@@ -15,6 +15,13 @@ Features:
 
 **Note:** For more details, refer to `/docs/DEVELOPMENT.md`.
 
+First, install all packages:
+
+```sh
+cd Turbo-Recipe
+npm install
+```
+
 ### Development mode
 
 To run the backend dev server:

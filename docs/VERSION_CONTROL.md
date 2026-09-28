@@ -66,7 +66,8 @@ You can start making your changes in this branch and it won't affect the main co
 	- All PRs should be approved by another set of eyes.
 	- Some strategies for reviewing someone else's PR:
 		- Look over their changes in the GitHub website by clicking the "Commits" tab and exploring the changes.
-		- Checkout their work locally and test it! This can be done by finding the branch name on the PR page, and then running `git fetch origin` + `git checkout <THEIR_BRANCH>` + `npm run dev`.
+		- Checkout their work locally and test it! This can be done by finding the branch name on the PR page, and then running `git fetch origin` + `git checkout <THEIR_BRANCH>` + run the application. 
+        - Refer to `DEVELOPMENT.MD` for instructions on running the app.
 4) If somebody suggests changes to your PR, make those changes, and test them.
 5) Once your PR is approved by somebody else, click "Merge".
 
