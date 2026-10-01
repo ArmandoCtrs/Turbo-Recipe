@@ -11,3 +11,36 @@ Features:
 * Export a shopping list based on their saved recipes.
 * Communicate with an AI chatbot to get recipe recommendations based on ingredients they have.
 
+## Running
+
+**Note:** For more details, refer to `/docs/DEVELOPMENT.md`.
+
+First, install all packages:
+
+```sh
+cd Turbo-Recipe
+npm install
+```
+
+### Development mode
+
+To run the backend dev server:
+
+```sh
+npm run dev:server
+```
+
+Then, in another terminal window, run the frontend dev server:
+
+```sh
+npm run dev:client
+```
+
+### Production mode
+
+The production server will run both the backend API, as well as host the web pages.
+
+```
+npm run build
+npm run start
+```
