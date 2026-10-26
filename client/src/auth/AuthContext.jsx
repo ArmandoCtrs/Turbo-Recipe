@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
     async function login(email, password) {
         // TODO: replace with a real API call
         // this is just a template for now
-        const fakeUser = { id: "1", email, name: email.split("@")[0] };
+        const fakeUser = { id: "1", email, firstName: "Sample", lastName: "User" };
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(fakeUser));
         setUser(fakeUser);
         return fakeUser;
