@@ -5,12 +5,18 @@ But since this is cumbersome to do over and over again, instead, we'll create so
 These functions will be called on the individual pages and handle all the fetching for us.
 */
 
-function useRecipes() {
+import { useState, useEffect } from "react";
+
+import SAMPLE_RECIPES from "../../../sample_data/recipes.json";
+
+export function useRecipes() {
     const [recipes, setRecipes] = useState([]);
     useEffect(() => {
         // TODO: run the actual fetch() call: this is just a placeholder for now
         setTimeout(() => {
-            setRecipes([])
+            setRecipes(SAMPLE_RECIPES);
         }, 50); // sample 50ms delay to simulate a fetch call
-    })
-}
+    }, []);
+
+    return recipes;
+};
