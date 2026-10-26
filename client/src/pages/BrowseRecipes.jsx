@@ -1,16 +1,15 @@
-import { useAuth } from "../auth/useAuth";
 import { useRecipes } from "../api";
 
 import { AppHeader } from "../components/AppHeader";
+import RecipeSearchBar from "../components/RecipeSearchBar";
 
 export function BrowseRecipes() {
-    const user = useAuth().user;
     const recipes = useRecipes();
     return (
         <div id="page-container">
             <AppHeader />
             <div id="search-container">
-
+                <RecipeSearchBar />
             </div>
             <div id="results-container">
                 {
