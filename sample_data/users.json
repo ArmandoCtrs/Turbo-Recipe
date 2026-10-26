@@ -1,0 +1,26 @@
+[
+  {
+    "id": "u1",
+    "username": "maria_cooks",
+    "firstName": "Maria",
+    "lastName": "Santos"
+  },
+  {
+    "id": "u2",
+    "username": "chefdave",
+    "firstName": "Dave",
+    "lastName": "Thompson"
+  },
+  {
+    "id": "u3",
+    "username": "veggie_priya",
+    "firstName": "Priya",
+    "lastName": "Patel"
+  },
+  {
+    "id": "u4",
+    "username": "bakerjen",
+    "firstName": "Jennifer",
+    "lastName": "Okafor"
+  }
+]
