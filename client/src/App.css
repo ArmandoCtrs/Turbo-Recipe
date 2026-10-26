@@ -18,7 +18,7 @@ html, body {
     max-width: 56rem;
     min-height: 100dvh;
     margin-inline: auto;
-    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2rem);
+    padding: clamp(1.5rem, 4vw, 1.5rem) clamp(1.25rem, 4vw, 2rem);
     border-inline: 1px solid #c6cbd3;
     background: #fcfcfb;
 }
@@ -27,6 +27,7 @@ header {
     font-size: 1.25rem;
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -34,7 +35,7 @@ header * {
     display: inline;
 }
 
-#page-title {
+.logo {
     display: flex;
     flex-direction: row;
     gap: 1rem;
@@ -44,6 +45,66 @@ header * {
     text-transform: uppercase;
     font-weight: bold;
     margin: 0;
+}
+
+#profile-dropdown {
+    position: relative;
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+}
+
+#profile-dropdown-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+#profile-dropdown-readout {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+#profile-dropdown-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1F1B2E;
+}
+
+#profile-dropdown-username {
+    font-size: 13px;
+    color: #6B6880;
+}
+
+#profile-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 180px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #E4E2EA;
+    border-radius: 12px;
+}
+
+#profile-dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#profile-dropdown-menu button:hover {
+    background: #F5F3F9;
 }
 
 @media (max-width: 56rem) {
