@@ -6,16 +6,27 @@ export function BrowseRecipes() {
     const user = useAuth().user;
     const recipes = useRecipes();
     return (
-        <div>
-            <h1>Browse Recipes</h1>
-            <p>Welcome back, <b>{user.firstName} {user.lastName}</b>!</p>
-            {
-                (recipes === undefined) ? (
-                    <div>Loading recipes...</div>
-                ) : (
-                    <div>{JSON.stringify(recipes)}</div>
-                )
-            }
+        <div id="page-container">
+            <header>
+                <div id="page-title">
+                    <span>(icon) </span>
+                    <span>Turbo Recipe</span>
+                </div>
+                {" – "}
+                <div>Logged in as  <b>{user.firstName} {user.lastName}</b></div>
+            </header>
+            <div id="search-container">
+
+            </div>
+            <div id="results-container">
+                {
+                    (recipes === undefined) ? (
+                        <div>Loading recipes...</div>
+                    ) : (
+                        <div>{JSON.stringify(recipes)}</div>
+                    )
+                }
+            </div>
         </div>
     );
 }
