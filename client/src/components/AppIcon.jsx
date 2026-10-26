@@ -1,4 +1,4 @@
-export function AppIcon({ size = 64, ...props }) {
+export function AppIcon({ size = 48, ...props }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

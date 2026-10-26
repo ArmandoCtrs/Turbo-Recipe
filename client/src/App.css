@@ -1,5 +1,7 @@
 /* put CSS rules in here */
 
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
 html, body {
     box-sizing: border-box;
     margin: 0;
@@ -32,14 +34,17 @@ header * {
     display: inline;
 }
 
-header #page-title {
-    font-size: 1.5rem;
+#page-title {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    font-size: 1.75rem;
+    font-family: "Lexend", sans-serif;
     text-transform: uppercase;
     font-weight: bold;
     margin: 0;
 }
-
-
 
 @media (max-width: 56rem) {
     #page-container {
