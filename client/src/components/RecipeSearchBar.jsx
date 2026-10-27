@@ -42,7 +42,7 @@ const styles = {
   addButtonDashed: { border: "1px dashed #a5adb2", color: "#4a5257" },
   smallInput: {
     height: 28,
-    padding: "0 12px",
+    padding: "0 14px",
     border: "1px solid #2f6fed",
     borderRadius: 14,
     fontSize: 13,
@@ -145,7 +145,7 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
 
         {author && (
           <span style={{ ...styles.chip, ...styles.authorChip }}>
-            by {author}
+            by @{author}
             <button
               type="button"
               style={styles.remove}
@@ -162,7 +162,7 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
             style={styles.smallInput}
             autoFocus
             value={draft}
-            placeholder={adding === "tag" ? "Type a tag" : "Type an author"}
+            placeholder={adding === "tag" ? "Type a tag" : "Type author's username"}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={handleDraftKeyDown}
             onBlur={() => setAdding(null)}
