@@ -1,25 +1,35 @@
 import { useRecipes } from "../api";
 
-import { AppHeader } from "../components/AppHeader";
+import { Layout } from "../components/Layout";
 import RecipeSearchBar from "../components/RecipeSearchBar";
+
+const styles = {
+    searchRegion: {
+        paddingTop: 32,
+        paddingBottom: 48,
+        margin: "0 auto",
+        display: "flex",
+        justifyContent: "center",
+    }
+}
 
 export function BrowseRecipes() {
     const recipes = useRecipes();
     return (
-        <div id="page-container">
-            <AppHeader />
-            <div id="search-container">
-                <RecipeSearchBar />
+        <Layout>
+            <div style={styles.searchRegion}>
+                <RecipeSearchBar onSearch={console.log} />
             </div>
-            <div id="results-container">
-                {
-                    (recipes === undefined) ? (
-                        <div>Loading recipes...</div>
-                    ) : (
-                        <div>{JSON.stringify(recipes)}</div>
-                    )
-                }
+            <div>
+                RESULTS:
             </div>
-        </div>
+            {
+                (recipes === undefined) ? (
+                    <div>Loading recipes...</div>
+                ) : (
+                    <div>{JSON.stringify(recipes)}</div>
+                )
+            }
+        </Layout>
     );
 }

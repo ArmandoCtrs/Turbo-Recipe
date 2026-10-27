@@ -1,4 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+function stripPrefix(text, prefix) {
+    if (text.startsWith(prefix)) {
+        return text.slice(prefix.length);
+    } else {
+        return text;
+    }
+}
 
 const styles = {
   form: { width: "100%", maxWidth: 640, fontFamily: "system-ui, sans-serif" },
@@ -8,7 +16,7 @@ const styles = {
     height: 46,
     padding: "0 20px",
     border: "1px solid #cfd5d9",
-    borderRadius: 23,
+    borderRadius: 13,
     background: "#f4f6f7",
     fontSize: 15,
   },
@@ -18,7 +26,7 @@ const styles = {
     alignItems: "center",
     height: 28,
     padding: "0 6px 0 12px",
-    borderRadius: 14,
+    borderRadius: 10,
     fontSize: 13,
   },
   tagChip: { background: "#e3f1e8", border: "1px solid #9cc7aa", color: "#1f5133" },
@@ -34,7 +42,7 @@ const styles = {
     height: 28,
     padding: "0 14px",
     border: "1px solid #cfd5d9",
-    borderRadius: 14,
+    borderRadius: 10,
     background: "#fff",
     fontSize: 13,
     cursor: "pointer",
@@ -44,7 +52,7 @@ const styles = {
     height: 28,
     padding: "0 14px",
     border: "1px solid #2f6fed",
-    borderRadius: 14,
+    borderRadius: 10,
     fontSize: 13,
   },
 };
@@ -63,7 +71,7 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
   }
 
   function addTag(text) {
-    const tag = text.trim().toLowerCase();
+    const tag = stripPrefix(text.trim().toLowerCase(), "#");
     if (tag && !tags.includes(tag)) {
       const nextTags = [...tags, tag];
       setTags(nextTags);
@@ -72,7 +80,7 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
   }
 
   function setAuthorFromText(text) {
-    const name = text.trim();
+    const name = stripPrefix(text.trim(), "@");
     if (name) {
       setAuthor(name);
       search({ author: name });
@@ -107,6 +115,17 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
     setAdding(type);
     setDraft("");
   }
+
+  useEffect(() => {
+    // debounce effect for searching through the query bar
+    if (query.endsWith(" ")) return;
+
+    const timeout = setTimeout(() => {
+        search();
+    }, 500);
+
+    return () => clearTimeout(timeout);
+}, [query]);
 
   const buttonStyle = hasFilters
     ? { ...styles.addButton, ...styles.addButtonDashed }
