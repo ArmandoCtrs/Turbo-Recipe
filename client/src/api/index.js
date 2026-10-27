@@ -10,12 +10,12 @@ import { useState, useEffect } from "react";
 import SAMPLE_RECIPES from "../../../sample_data/recipes.json";
 
 export function useRecipes() {
-    const [recipes, setRecipes] = useState([]);
+    const [recipes, setRecipes] = useState(null);
     useEffect(() => {
         // TODO: run the actual fetch() call: this is just a placeholder for now
         setTimeout(() => {
             setRecipes(SAMPLE_RECIPES);
-        }, 50); // sample 50ms delay to simulate a fetch call
+        }, 500); // sample 500ms delay to simulate a fetch call
     }, []);
 
     return recipes;

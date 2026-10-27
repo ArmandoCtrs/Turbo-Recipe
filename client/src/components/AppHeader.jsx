@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Logo } from "./Logo";
 import { ProfileIcon } from "./ProfileIcon";
 import { useAuth } from "../auth/useAuth";
+import { useNavigate } from "react-router";
 
 const styles = {
     dropdown: {
@@ -47,6 +48,8 @@ const styles = {
 
 export function ProfileDropdown({ user }) {
     const [open, setOpen] = useState(false);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
     return (
         <div style={styles.dropdown}>
@@ -67,8 +70,8 @@ export function ProfileDropdown({ user }) {
 
             {open && (
                 <div style={styles.menu}>
-                    <button className="menu-button">Shopping List</button>
-                    <button className="menu-button">Log Out</button>
+                    <button className="menu-button" onClick={() => navigate("/shopping-list/export")}>Shopping List</button>
+                    <button className="menu-button" onClick={() => logout()}>Log Out</button>
                 </div>
             )}
         </div>
