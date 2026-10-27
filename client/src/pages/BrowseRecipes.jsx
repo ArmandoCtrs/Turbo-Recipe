@@ -5,8 +5,8 @@ import RecipeSearchBar from "../components/RecipeSearchBar";
 
 const styles = {
     searchRegion: {
-        paddingTop: 32,
-        paddingBottom: 48,
+        paddingTop: 24,
+        paddingBottom: 24,
         margin: "0 auto",
         display: "flex",
         justifyContent: "center",
@@ -20,6 +20,7 @@ export function BrowseRecipes() {
             <div style={styles.searchRegion}>
                 <RecipeSearchBar onSearch={console.log} />
             </div>
+            <h2>Results</h2>
             <div>
                 RESULTS:
             </div>
