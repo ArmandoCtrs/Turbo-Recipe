@@ -10,7 +10,10 @@ const styles = {
         gap: 10,
         padding: "16px 20px",
         background: "#fff",
-        border: "1px solid #c6cbd3",
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderColor: "#c6cbd3",
+        borderRadius: 12,
         borderRadius: 12,
         color: "#1c2026",
         textDecoration: "none",
@@ -19,10 +22,6 @@ const styles = {
     cardHover: {
         borderColor: "#8d95a3",
         boxShadow: "0 2px 8px rgb(28 32 38 / 0.06)",
-    },
-    cardFocus: {
-        outline: "2px solid #2b5fd9",
-        outlineOffset: 2,
     },
     heading: {
         display: "flex",
@@ -84,6 +83,7 @@ const styles = {
     results: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+        alignContent: "start",
         gap: 16,
         minHeight: 0,
         height: "100%",
@@ -97,7 +97,6 @@ const styles = {
 
 export function RecipeCard({ recipe, author }) {
     const [hovered, setHovered] = useState(false);
-    const [focused, setFocused] = useState(false);
 
     const { id, name, tags = [], description, instructions } = recipe;
 
@@ -113,12 +112,9 @@ export function RecipeCard({ recipe, author }) {
             style={{
                 ...styles.card,
                 ...(hovered && styles.cardHover),
-                ...(focused && styles.cardFocus),
             }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
-            onFocus={(e) => setFocused(e.currentTarget.matches(":focus-visible"))}
-            onBlur={() => setFocused(false)}
         >
             <div style={styles.heading}>
                 <h3 style={styles.name}>{name}</h3>

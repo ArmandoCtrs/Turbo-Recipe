@@ -7,8 +7,8 @@ import { RecipeSearchResults } from "../components/RecipeSearchResults";
 
 const styles = {
     searchRegion: {
-        paddingTop: 0,
-        paddingBottom: 30,
+        paddingTop: 15,
+        paddingBottom: 45,
         display: "flex",
         justifyContent: "center",
     },
@@ -30,9 +30,23 @@ export function BrowseRecipes() {
     const [searchResults, setSearchResults] = useState(null);
 
     function onSearch(data) {
-        // placeholder for now
-        setSearchResults(recipes);
-        console.log(data);
+        const { query, tags, author } = data;
+
+        if (!query && tags.length === 0 && !author) {
+            setSearchResults(null);
+            return;
+        }
+        
+        const results = recipes.filter((recipe) => {
+            const matchesQuery = query && recipe.name.toLowerCase().includes(query.toLowerCase());
+            const matchesTags = tags.some(tag => recipe.tags.includes(tag));
+            const matchesAuthor = recipe.author === author;
+            console.log(recipe.author, author, matchesAuthor);
+            console.log(matchesQuery, matchesTags, matchesAuthor);
+            return matchesQuery || matchesTags || matchesAuthor;
+        });
+
+        setSearchResults(results);
     }
 
     return (
