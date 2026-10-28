@@ -122,7 +122,7 @@ export function RecipeSearchBar({ disabled = false, onSearch = () => {} }) {
 
   useEffect(() => {
     // debounce effect for searching through the query bar
-    if (query.endsWith(" ") || query.length < 1) return;
+    if (query.endsWith(" ")) return;
 
     const timeout = setTimeout(() => {
         search();

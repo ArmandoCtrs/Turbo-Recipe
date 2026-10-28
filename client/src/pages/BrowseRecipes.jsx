@@ -38,12 +38,11 @@ export function BrowseRecipes() {
         }
         
         const results = recipes.filter((recipe) => {
-            const matchesQuery = query && recipe.name.toLowerCase().includes(query.toLowerCase());
-            const matchesTags = tags.some(tag => recipe.tags.includes(tag));
-            const matchesAuthor = recipe.author === author;
-            console.log(recipe.author, author, matchesAuthor);
-            console.log(matchesQuery, matchesTags, matchesAuthor);
-            return matchesQuery || matchesTags || matchesAuthor;
+            const matchesQuery = !query || recipe.name.toLowerCase().includes(query.toLowerCase());
+            const matchesTags = tags.length === 0 || tags.every(tag => recipe.tags.includes(tag));
+            const matchesAuthor = !author || recipe.author === author;
+
+            return matchesQuery && matchesTags && matchesAuthor;
         });
 
         setSearchResults(results);
