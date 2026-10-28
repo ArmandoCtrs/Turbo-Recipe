@@ -14,9 +14,14 @@ const styles = {
     },
     resultsRegion: {
         flex: 1,
+        minHeight: 0,
         border: "1px dashed #c6cbd3",
-        borderRadius: "16px",
+        borderBottom: "none",
+        borderRadius: "16px 16px 0px 0px",
         padding: "0px 16px",
+        margin: "-12px 0px",
+        display: "flex",
+        flexDirection: "column",
     }
 }
 

@@ -81,6 +81,18 @@ const styles = {
         background: "none",
         paddingInline: 4,
     },
+    results: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+        gap: 16,
+        minHeight: 0,
+        height: "100%",
+        flex: 1,
+        overflowY: "auto",
+        paddingBottom: 16,
+        paddingRight: 8,
+        paddingTop: 4
+    },
 };
 
 export function RecipeCard({ recipe, author }) {
@@ -143,7 +155,12 @@ export function RecipeSearchResults({ ready, results }) {
             </div>
         )
     } else {
-        return <p>Man, we got results!!!!!</p>
+        return (
+            <div style={styles.results}>
+                {results.map((recipe) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} author={recipe.authorUser} />
+                ))}
+            </div>
+        )
     }
 }
-
