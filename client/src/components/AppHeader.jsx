@@ -1,8 +1,27 @@
 import { useState } from "react";
-import { Logo } from "./Logo";
 import { ProfileIcon } from "./ProfileIcon";
 import { useAuth } from "../auth/useAuth";
 import { useNavigate } from "react-router";
+
+import { AppIcon } from "./AppIcon";
+
+export function AppLogo() {
+    const navigate = useNavigate();
+    
+    return (
+        <div id="logo" onClick={() => navigate("/")}>
+            <AppIcon />
+            <span id="logo-text">
+                <span style={{ color: "#1F1B2E" }}>
+                    Turbo&nbsp;
+                </span>
+                <span style={{ color: "#FF6B2C" }}>
+                    Recipe
+                </span>
+            </span>
+        </div>
+    );
+}
 
 const styles = {
     dropdown: {
@@ -83,7 +102,7 @@ export function AppHeader() {
 
     return (
         <header>
-            <Logo />
+            <AppLogo />
             <ProfileDropdown user={user} />
         </header>
     );

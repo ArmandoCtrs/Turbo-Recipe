@@ -55,9 +55,13 @@ const styles = {
     borderRadius: 10,
     fontSize: 13,
   },
+  disabled: {
+    opacity: 0.5,
+    cursor: "not-allowed",
+  },
 };
 
-export default function RecipeSearchBar({ onSearch = () => {} }) {
+export function RecipeSearchBar({ disabled = false, onSearch = () => {} }) {
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState([]);
   const [author, setAuthor] = useState(null);
@@ -118,7 +122,7 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
 
   useEffect(() => {
     // debounce effect for searching through the query bar
-    if (query.endsWith(" ")) return;
+    if (query.endsWith(" ") || query.length < 1) return;
 
     const timeout = setTimeout(() => {
         search();
@@ -140,8 +144,12 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
       }}
     >
       <input
-        style={styles.searchInput}
+        style={{
+            ...styles.searchInput,
+            ...(disabled ? styles.disabled : {}),
+        }}
         type="search"
+        disabled={disabled}
         placeholder="Search recipes..."
         value={query}
         onChange={(event) => setQuery(event.target.value)}
@@ -156,6 +164,7 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
               style={styles.remove}
               aria-label={`Remove tag ${tag}`}
               onClick={() => removeTag(tag)}
+              disabled={disabled}
             >
               &times;
             </button>
@@ -185,15 +194,33 @@ export default function RecipeSearchBar({ onSearch = () => {} }) {
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={handleDraftKeyDown}
             onBlur={() => setAdding(null)}
+            disabled={disabled}
           />
         ) : (
           <>
-            <button type="button" style={buttonStyle} onClick={() => startAdding("tag")}>
+            <button 
+                type="button"
+                onClick={() => startAdding("tag")}
+                disabled={disabled}
+                style={{
+                ...buttonStyle,
+                ...(disabled ? styles.disabled : {}),
+                }}
+            >
               + {hasFilters ? "Tag" : "Add tag"}
             </button>
             {/* Only one author allowed, so hide the button once one is set */}
             {!author && (
-              <button type="button" style={buttonStyle} onClick={() => startAdding("author")}>
+              <button 
+                    type="button"
+                    onClick={() => startAdding("author")}
+                    disabled={disabled}
+                    style={{
+                        ...buttonStyle,
+                        ...(disabled ? styles.disabled : {}),
+                    }}
+                >
+
                 + {hasFilters ? "Author" : "Add author"}
               </button>
             )}
