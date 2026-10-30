@@ -1,0 +1,31 @@
+NOTE: all the sample data in this directory was generated using Claude.
+
+These are just some tentative notes on the schema I will operate with when creating this sample data.
+We can change this in the future. Let me know if you have any suggestions.
+
+USER:
+- ID
+- Username     (str)
+- First name   (str)
+- Last name    (str)
+
+RECIPE:
+- ID
+- Name         (str)
+- Author       (USER id)
+- Tags         (str[])
+- Description  (str optional)
+- Ingredients  (str[])
+- Instructions (str)
+
+SHOPPING LIST:
+- ID
+- User         (USER id)
+- Recipes      (RECIPE[] id)
+
+======
+Notes about some design decisions I made:
+- I considered making INGREDIENT its own entity, but I figured that we probably don't need to go that deep
+  for the purposes of this assignment. Especially since the AI can make sense of all the units in whatever format.
+- We can add authentication fields to the USER entity later.
+- I'm thinking that the RECIPE instructions can be just plaintext. Maybe we can support Markdown in the future.

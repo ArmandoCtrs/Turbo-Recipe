@@ -1,0 +1,185 @@
+[
+  {
+    "id": "r1",
+    "name": "Classic Spaghetti Carbonara",
+    "author": "u1",
+    "tags": ["italian", "pasta", "dinner"],
+    "description": "Creamy Roman pasta made with eggs, pecorino, and crispy guanciale.",
+    "ingredients": [
+      "400g spaghetti",
+      "150g guanciale or pancetta, diced",
+      "4 large eggs",
+      "1 cup grated pecorino romano",
+      "1 tsp black pepper",
+      "salt for pasta water"
+    ],
+    "instructions": "Boil the spaghetti in salted water until al dente, reserving 1 cup of pasta water. Fry the guanciale until crisp. Whisk eggs, pecorino, and pepper together. Toss hot pasta with the guanciale, remove from heat, then stir in the egg mixture, adding pasta water as needed until creamy. Serve immediately."
+  },
+  {
+    "id": "r2",
+    "name": "Chicken Tikka Masala",
+    "author": "u3",
+    "tags": ["indian", "chicken", "dinner", "curry"],
+    "description": "Tender marinated chicken in a spiced tomato cream sauce.",
+    "ingredients": [
+      "700g boneless chicken thighs, cubed",
+      "1 cup plain yogurt",
+      "2 tbsp garam masala",
+      "1 tbsp minced ginger",
+      "4 cloves garlic, minced",
+      "1 large onion, diced",
+      "1 can (400g) crushed tomatoes",
+      "1/2 cup heavy cream",
+      "2 tbsp vegetable oil",
+      "fresh cilantro for garnish"
+    ],
+    "instructions": "Marinate the chicken in yogurt, half the garam masala, ginger, and garlic for at least 1 hour. Sear the chicken in oil until browned, then set aside. Saute the onion until soft, add the remaining spices and tomatoes, and simmer for 15 minutes. Stir in the cream and chicken and cook for 10 more minutes. Garnish with cilantro and serve with rice or naan."
+  },
+  {
+    "id": "r3",
+    "name": "Vegan Chickpea Salad Sandwich",
+    "author": "u3",
+    "tags": ["vegan", "lunch", "sandwich", "quick"],
+    "description": "A no-cook, protein-packed take on classic chicken salad.",
+    "ingredients": [
+      "1 can (425g) chickpeas, drained",
+      "3 tbsp vegan mayonnaise",
+      "1 tsp dijon mustard",
+      "1 celery stalk, finely diced",
+      "2 tbsp red onion, minced",
+      "1 tbsp lemon juice",
+      "8 slices whole grain bread",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Roughly mash the chickpeas in a bowl, leaving some texture. Mix in the mayonnaise, mustard, celery, onion, and lemon juice. Season with salt and pepper. Spread onto bread and assemble sandwiches."
+  },
+  {
+    "id": "r4",
+    "name": "Fluffy Buttermilk Pancakes",
+    "author": "u4",
+    "tags": ["breakfast", "baking", "vegetarian"],
+    "description": "Light, tall pancakes perfect for weekend mornings.",
+    "ingredients": [
+      "2 cups all-purpose flour",
+      "2 tbsp sugar",
+      "2 tsp baking powder",
+      "1/2 tsp baking soda",
+      "1/2 tsp salt",
+      "2 cups buttermilk",
+      "2 large eggs",
+      "4 tbsp melted butter"
+    ],
+    "instructions": "Whisk the dry ingredients together in a large bowl. In another bowl, combine buttermilk, eggs, and melted butter. Pour the wet ingredients into the dry and stir until just combined; a few lumps are fine. Cook 1/4 cup scoops on a medium-hot greased griddle until bubbles form, then flip and cook until golden."
+  },
+  {
+    "id": "r5",
+    "name": "Beef Tacos",
+    "author": "u2",
+    "tags": ["mexican", "beef", "dinner", "quick"],
+    "ingredients": [
+      "500g ground beef",
+      "1 packet taco seasoning",
+      "8 small corn tortillas",
+      "1 cup shredded lettuce",
+      "1 cup diced tomatoes",
+      "1 cup shredded cheddar",
+      "1/2 cup sour cream",
+      "1 lime, cut into wedges"
+    ],
+    "instructions": "Brown the ground beef in a skillet and drain the excess fat. Add the taco seasoning and a splash of water, then simmer for 5 minutes. Warm the tortillas in a dry pan. Fill with beef and top with lettuce, tomatoes, cheese, and sour cream. Serve with lime wedges."
+  },
+  {
+    "id": "r6",
+    "name": "Garlic Butter Shrimp",
+    "author": "u1",
+    "tags": ["seafood", "dinner", "quick", "low-carb"],
+    "description": "Ready in 15 minutes with just a handful of ingredients.",
+    "ingredients": [
+      "500g large shrimp, peeled and deveined",
+      "4 tbsp butter",
+      "5 cloves garlic, minced",
+      "1/4 cup dry white wine",
+      "1 tbsp lemon juice",
+      "2 tbsp chopped parsley",
+      "1/4 tsp red pepper flakes",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Melt the butter in a large skillet over medium-high heat. Add the garlic and red pepper flakes and cook for 30 seconds. Add the shrimp and cook 2 minutes per side until pink. Pour in the wine and lemon juice and simmer for 1 minute. Stir in the parsley and serve."
+  },
+  {
+    "id": "r7",
+    "name": "Chocolate Chip Cookies",
+    "author": "u4",
+    "tags": ["dessert", "baking", "vegetarian", "cookies"],
+    "description": "Chewy in the middle with crisp, golden edges.",
+    "ingredients": [
+      "2 1/4 cups all-purpose flour",
+      "1 tsp baking soda",
+      "1 tsp salt",
+      "1 cup butter, softened",
+      "3/4 cup granulated sugar",
+      "3/4 cup brown sugar",
+      "2 large eggs",
+      "2 tsp vanilla extract",
+      "2 cups chocolate chips"
+    ],
+    "instructions": "Preheat the oven to 190C (375F). Whisk the flour, baking soda, and salt together. Cream the butter with both sugars until fluffy, then beat in the eggs and vanilla. Gradually mix in the dry ingredients, then fold in the chocolate chips. Drop rounded tablespoons onto lined baking sheets and bake 9 to 11 minutes until golden."
+  },
+  {
+    "id": "r8",
+    "name": "Veggie Stir-Fry with Tofu",
+    "author": "u3",
+    "tags": ["vegan", "asian", "dinner", "gluten-free"],
+    "description": "A colorful weeknight stir-fry with crispy tofu.",
+    "ingredients": [
+      "400g extra-firm tofu, cubed",
+      "2 cups broccoli florets",
+      "1 red bell pepper, sliced",
+      "1 carrot, thinly sliced",
+      "3 tbsp tamari",
+      "1 tbsp maple syrup",
+      "1 tbsp cornstarch",
+      "2 cloves garlic, minced",
+      "1 tbsp sesame oil",
+      "cooked rice for serving"
+    ],
+    "instructions": "Toss the tofu with cornstarch and pan-fry in sesame oil until crisp, then set aside. Stir-fry the garlic and vegetables over high heat for 4 to 5 minutes. Add the tamari and maple syrup, return the tofu to the pan, and toss to coat. Serve over rice."
+  },
+  {
+    "id": "r9",
+    "name": "Hearty Beef Chili",
+    "author": "u2",
+    "tags": ["beef", "dinner", "soup", "spicy"],
+    "description": "A thick, slow-simmered chili that tastes even better the next day.",
+    "ingredients": [
+      "700g ground beef",
+      "1 large onion, diced",
+      "3 cloves garlic, minced",
+      "1 can (400g) kidney beans, drained",
+      "1 can (400g) black beans, drained",
+      "1 can (800g) crushed tomatoes",
+      "2 tbsp chili powder",
+      "1 tsp cumin",
+      "1 tsp smoked paprika",
+      "1 cup beef broth"
+    ],
+    "instructions": "Brown the beef with the onion in a large pot, then add the garlic and spices and cook for 1 minute. Stir in the tomatoes, beans, and broth. Bring to a boil, then reduce the heat and simmer uncovered for 45 minutes, stirring occasionally. Adjust seasoning and serve with toppings of your choice."
+  },
+  {
+    "id": "r10",
+    "name": "Greek Salad",
+    "author": "u1",
+    "tags": ["salad", "vegetarian", "gluten-free", "lunch", "quick"],
+    "ingredients": [
+      "3 large tomatoes, cut into wedges",
+      "1 cucumber, sliced",
+      "1/2 red onion, thinly sliced",
+      "1/2 cup Kalamata olives",
+      "200g feta cheese, cubed",
+      "3 tbsp extra virgin olive oil",
+      "1 tbsp red wine vinegar",
+      "1 tsp dried oregano"
+    ],
+    "instructions": "Combine the tomatoes, cucumber, red onion, and olives in a large bowl. Whisk the olive oil, vinegar, and oregano together and pour over the salad. Toss gently, top with the feta, and serve."
+  }
+]

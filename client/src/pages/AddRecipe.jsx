@@ -1,10 +1,11 @@
+import { Layout } from "../components/Layout";
 import { SampleSitemap } from "../utils/SampleSitemap";
 
 export function AddRecipe() {
     return (
-        <div>
+        <Layout>
             Add Recipe Page
             <SampleSitemap />
-        </div>
+        </Layout>
     );
 }

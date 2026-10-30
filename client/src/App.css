@@ -1,1 +1,187 @@
 /* put CSS rules in here */
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, sans-serif;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M5 5L19 19M19 5L5 19'/%3E%3C/svg%3E");
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 60rem;
+    height: 100dvh;
+    margin-inline: auto;
+    padding: 0.8rem clamp(1.25rem, 4vw, 2rem);
+    border-inline: 1px solid #c6cbd3;
+    background: #fcfcfb;
+}
+
+header {
+    font-size: 1.25rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #c6cbd3;
+}
+
+header * {
+    display: inline;
+}
+
+#logo {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    font-size: 1.75rem;
+    font-family: "Lexend", sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menu-button {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.menu-button:hover {
+    background: #F5F3F9;
+}
+
+@media (max-width: 56rem) {
+    #page-container {
+        border-inline: 0;
+    }
+}
+
+@media (max-width: 35rem) {
+    #logo-text {
+        display: none;
+    }
+    
+}
+
+/* Styles for elements within the content section (all AI-generated) */
+
+:root {
+    --text: #1c2026;          /* near-black, cool-tinted to match the border */
+    --text-muted: #5b6370;
+    --border: #c6cbd3;
+    --bg: #fcfcfb;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--text);
+}
+
+/* Headings */
+#content h1,
+#content h2,
+#content h3,
+#content h4 {
+    font-family: "Lexend", sans-serif;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 1.25em 0 0.5em;
+    text-wrap: balance;
+}
+
+#content h1 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 600;
+    margin-top: 0;
+}
+
+#content h2 {
+    font-size: clamp(1.35rem, 3vw, 1.6rem);
+    font-weight: 600;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid var(--border); /* reuses the container border color */
+}
+
+#content h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* Small uppercase label: the one place the logo's uppercase style returns */
+#content h4,
+.eyebrow {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+/* Body content */
+#content p {
+    margin: 0 0 1em;
+    max-width: 65ch;   /* comfortable line length within the 56rem column */
+}
+
+#content a {
+    color: #2b5fd9;
+    text-underline-offset: 0.2em;
+}
+
+#content hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+#content blockquote {
+    margin: 1.5em 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--border);
+    color: var(--text-muted);
+}
+
+#content code {
+    font-size: 0.9em;
+    background: #f0f1f3;
+    padding: 0.15em 0.35em;
+    border-radius: 4px;
+}
