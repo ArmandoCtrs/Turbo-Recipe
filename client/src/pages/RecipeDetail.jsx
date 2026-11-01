@@ -1,3 +1,7 @@
+// From Albert: LLM Disclosure. This component was created with the assistance of VS Code's CoPilot (GPT-5.6 Luna). I'd specifically asked it to
+// generate the RecipeDetail component for displaying recipe details, explicitly including name, author, tags, description, ingredients, and instructions.
+// As a frame of reference, I gave it my Zillow API that I made for Assignment 5 as something to model after.
+
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { getRecipe } from "../api";
@@ -59,8 +63,8 @@ const styles = {
     },
     instructions: {
         margin: 0,
+        paddingLeft: 22,
         lineHeight: 1.7,
-        whiteSpace: "pre-wrap",
     },
 };
 
@@ -89,8 +93,14 @@ export function RecipeDetail() {
         };
     }, [recipeId]);
 
+    // As requested, the string in the "instructions" field is split into individual steps, splitting for each period.
+    // Could use newlines, but either way, it'd be good to tell the user when they're actually adding a new recipe.
     const recipe = recipeLoad?.recipeId === recipeId ? recipeLoad.recipe : null;
     const error = recipeLoad?.recipeId === recipeId ? recipeLoad.error : null;
+    const instructionSteps = recipe?.instructions
+        .split(".")
+        .map((instruction) => instruction.trim())
+        .filter(Boolean);
 
     if (error) {
         return (
@@ -133,16 +143,20 @@ export function RecipeDetail() {
 
                 <section style={styles.section}>
                     <h2 style={styles.sectionHeading}>Ingredients</h2>
-                    <ul style={styles.ingredients}>
+                    <ol style={styles.ingredients}>
                         {recipe.ingredients.map((ingredient) => (
                             <li key={ingredient}>{ingredient}</li>
                         ))}
-                    </ul>
+                    </ol>
                 </section>
 
                 <section style={styles.section}>
                     <h2 style={styles.sectionHeading}>Instructions</h2>
-                    <p style={styles.instructions}>{recipe.instructions}</p>
+                    <ol style={styles.instructions}>
+                        {instructionSteps.map((instruction) => (
+                            <li key={instruction}>{instruction}.</li>
+                        ))}
+                    </ol>
                 </section>
             </main>
         </Layout>

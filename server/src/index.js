@@ -42,6 +42,7 @@ app.get("/api/ping", (req, res) => {
 
 // From Albert: Added an endpoint for recipe fetches by ID, 
 // allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
+// After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.
 app.get("/api/recipes/:recipeId", (req, res) => {
     const recipe = recipes.find((item) => item.id === req.params.recipeId);
 
