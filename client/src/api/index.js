@@ -20,3 +20,16 @@ export function useRecipes() {
 
     return recipes;
 };
+
+/* From Albert: Added function to fetch only a single recipe by its ID. I have it so that the 
+   function throws an error if the recipe cannot be loaded, and the URL displays the recipe ID in the endpoint. */
+export async function getRecipe(recipeId) {
+    const response = await fetch(`/api/recipes/${encodeURIComponent(recipeId)}`);
+
+    if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error ?? "Unable to load recipe.");
+    }
+
+    return response.json();
+}

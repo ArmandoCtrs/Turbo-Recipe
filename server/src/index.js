@@ -1,10 +1,15 @@
 import path from "path";
+import { readFileSync } from "fs";
 import express from "express";
 
 const app = express();
 
+// From Albert: I also added backend support for fetching a recipe by its ID. Of course, this isn't permanent and will be replaced,
+// by a database, but it's proof that the functionality works.
 const isProd = !process.argv.includes("--dev");
 const clientDist = path.resolve(import.meta.dirname, "../../client/dist");
+const recipesPath = path.resolve(import.meta.dirname, "../../sample_data/recipes.json");
+const recipes = JSON.parse(readFileSync(recipesPath, "utf8"));
 
 if (isProd) {
     app.use(express.static(clientDist));
@@ -33,6 +38,19 @@ if (isProd) {
 
 app.get("/api/ping", (req, res) => {
     res.json({ message: "up", timestamp: Date.now() });
+});
+
+// From Albert: Added an endpoint for recipe fetches by ID, 
+// allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
+app.get("/api/recipes/:recipeId", (req, res) => {
+    const recipe = recipes.find((item) => item.id === req.params.recipeId);
+
+    // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
+    if (!recipe) {
+        return res.status(404).json({ error: "Recipe not found." });
+    }
+
+    res.json(recipe);
 });
 
 app.listen(3001, () => {
