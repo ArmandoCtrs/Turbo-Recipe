@@ -103,7 +103,7 @@ export function AppHeader() {
     return (
         <header>
             <AppLogo />
-            <ProfileDropdown user={user} />
+            {user && <ProfileDropdown user={user} />}
         </header>
     );
 }

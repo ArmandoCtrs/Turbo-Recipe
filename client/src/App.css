@@ -185,3 +185,12 @@ header * {
     padding: 0.15em 0.35em;
     border-radius: 4px;
 }
+
+input[type="password"],
+input[type="text"],
+label,
+textarea, 
+select {
+  display: block;
+  margin-bottom: 15px
+}
