@@ -10,6 +10,8 @@ export default defineConfig({
                 target: "http://localhost:3001",
                 changeOrigin: true,
             },
+            "/login": "http://localhost:3001",
+            "/logout": "http://localhost:3001",
         },
     },
     plugins: [
