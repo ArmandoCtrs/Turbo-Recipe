@@ -11,6 +11,29 @@ const clientDist = path.resolve(import.meta.dirname, "../../client/dist");
 const recipesPath = path.resolve(import.meta.dirname, "../../sample_data/recipes.json");
 const recipes = JSON.parse(readFileSync(recipesPath, "utf8"));
 
+app.get("/api/ping", (req, res) => {
+    res.json({ message: "up", timestamp: Date.now() });
+});
+
+// From Albert: Added an endpoint for recipe fetches by ID, 
+// allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
+// After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.
+app.get("/api/recipes/:recipeId", (req, res) => {
+    const recipe = recipes.find((item) => item.id === req.params.recipeId);
+
+    // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
+    if (!recipe) {
+        return res.status(404).json({ error: "Recipe not found." });
+    }
+
+    res.json(recipe);
+});
+
+// from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html
+app.use("/api", (req, res) => {
+    res.status(404).json({ error: "Not found." });
+});
+
 if (isProd) {
     app.use(express.static(clientDist));
     app.get("/{*splat}", (req, res) => {
@@ -35,24 +58,6 @@ if (isProd) {
         );
     });
 }
-
-app.get("/api/ping", (req, res) => {
-    res.json({ message: "up", timestamp: Date.now() });
-});
-
-// From Albert: Added an endpoint for recipe fetches by ID, 
-// allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
-// After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.
-app.get("/api/recipes/:recipeId", (req, res) => {
-    const recipe = recipes.find((item) => item.id === req.params.recipeId);
-
-    // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
-    if (!recipe) {
-        return res.status(404).json({ error: "Recipe not found." });
-    }
-
-    res.json(recipe);
-});
 
 app.listen(3001, () => {
     console.log("Server listening on port 3001");
