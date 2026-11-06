@@ -9,7 +9,7 @@ export function AddRecipe() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log({ title, ingredients, instructions });
-       
+
     };
 
     return (
