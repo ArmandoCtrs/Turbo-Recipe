@@ -19,6 +19,7 @@ export function AddRecipe() {
                 <p>
                     Title
                     <input
+                        style={{ display: "block" }}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
@@ -27,6 +28,7 @@ export function AddRecipe() {
                 <p>
                     Ingredients
                     <textarea
+                        style={{ display: "block" }}
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
                     />
@@ -34,6 +36,7 @@ export function AddRecipe() {
                 <p>
                     Steps
                     <textarea
+                        style={{ display: "block" }}
                         value={steps}
                         onChange={(e) => setSteps(e.target.value)}
                     />
