@@ -10,7 +10,7 @@ export function AddRecipe() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log({ title, ingredients, steps });
-        // TODO: send to your API
+       
     };
 
     return (
