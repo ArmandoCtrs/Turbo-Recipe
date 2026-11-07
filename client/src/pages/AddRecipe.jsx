@@ -9,15 +9,7 @@ export function AddRecipe() {
         ingredients: "",
         instructions: "",
     });
-
-   
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        // TODO: send to your API / store
-        console.log("Submitting recipe:", form);
-    };
-
+    
     return (
         <Layout>
             <h1>Add Recipe</h1>
