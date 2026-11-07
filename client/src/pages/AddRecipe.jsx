@@ -18,7 +18,11 @@ export function AddRecipe() {
             <form onSubmit={handleSubmit}>
                 <p>
                     Title
-                    <input
+                    <input,
+                    select {
+                        display: block;
+                    margin-bottom: 15px
+                    }
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
@@ -26,14 +30,22 @@ export function AddRecipe() {
                 </p>
                 <p>
                     Ingredients
-                    <textarea
+                    <textarea,
+                     select {
+                        display: block;
+                    margin-bottom: 15px
+                    }
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
                     />
                 </p>
                 <p>
                     Steps
-                    <textarea
+                    <textarea,
+                     select {
+                        display: block;
+                    margin-bottom: 15px
+                    }
                         value={steps}
                         onChange={(e) => setSteps(e.target.value)}
                     />
