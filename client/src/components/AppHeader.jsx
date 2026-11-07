@@ -7,7 +7,7 @@ import { AppIcon } from "./AppIcon";
 
 export function AppLogo() {
     const navigate = useNavigate();
-    
+
     return (
         <div id="logo" onClick={() => navigate("/")}>
             <AppIcon />
