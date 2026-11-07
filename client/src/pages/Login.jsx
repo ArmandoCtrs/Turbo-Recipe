@@ -60,6 +60,7 @@ export function Login() {
 
                 <label>
                     <input
+                        className="rememeber-checkbox"
                         type="checkbox"
                         defaultChecked={true}
                         name="remember"
