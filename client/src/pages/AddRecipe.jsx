@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { Layout } from "../components/Layout";
 import { SampleSitemap } from "../utils/SampleSitemap";
 
