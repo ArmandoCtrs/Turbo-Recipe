@@ -21,13 +21,18 @@ const styles = {
         textDecoration: "none",
     },
     heading: {
+        display: "flex",
+        flexDirection: "column", // Overrides default App.css flex-direction to display header elements vertically.
+        alignItems: "stretch",
         marginBottom: 24,
     },
     name: {
+        display: "block",
         margin: 0,
         fontFamily: '"Lexend", sans-serif',
         fontSize: 32,
         lineHeight: 1.2,
+        width: "100%",
     },
     author: {
         display: "block",
