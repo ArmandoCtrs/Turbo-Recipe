@@ -16,28 +16,28 @@ export function AddRecipe() {
         <Layout>
             <h1>Add Recipe</h1>
             <form onSubmit={handleSubmit}>
-                <label>
+                <p>
                     Title
                     <input
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
                     />
-                </label>
-                <label>
+                </p>
+                <p>
                     Ingredients
                     <textarea
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
                     />
-                </label>
-                <label>
+                </p>
+                <p>
                     Steps
                     <textarea
                         value={steps}
                         onChange={(e) => setSteps(e.target.value)}
                     />
-                </label>
+                </p>
                 <button type="submit">Save recipe</button>
             </form>
         </Layout>
