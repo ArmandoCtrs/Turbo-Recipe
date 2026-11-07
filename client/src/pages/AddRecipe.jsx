@@ -18,7 +18,7 @@ export function AddRecipe() {
             <form onSubmit={handleSubmit}>
                 <p>
                     Title
-                    <input,
+                    <input
                     select {
                         display: block;
                     margin-bottom: 15px
