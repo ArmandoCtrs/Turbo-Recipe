@@ -185,3 +185,11 @@ header * {
     padding: 0.15em 0.35em;
     border-radius: 4px;
 }
+
+input,
+label,
+textarea, 
+select {
+  display: block;
+  margin-bottom: 15px; /* Optional: Adds vertical spacing between fields */
+}
