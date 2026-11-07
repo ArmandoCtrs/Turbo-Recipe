@@ -26,7 +26,7 @@ export function AddRecipe() {
                     />
                 </label>
                 <label>
-                    Ingredients (one per line)
+                    Ingredients
                     <textarea
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
