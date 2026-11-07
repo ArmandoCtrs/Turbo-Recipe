@@ -186,11 +186,10 @@ header * {
     border-radius: 4px;
 }
 
-input[type="password"],
-input[type="text"],
+input,
 label,
 textarea, 
 select {
   display: block;
-  margin-bottom: 15px
+  margin-bottom: 15px; /* Optional: Adds vertical spacing between fields */
 }
