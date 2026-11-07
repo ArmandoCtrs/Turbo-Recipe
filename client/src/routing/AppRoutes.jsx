@@ -3,12 +3,14 @@ import { Route, Routes } from "react-router";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 import { Login } from "../pages/Login";
+import { Register } from "../pages/Register";
 import { BrowseRecipes } from "../pages/BrowseRecipes";
 import { RecipeDetail } from "../pages/RecipeDetail";
 import { AddRecipe } from "../pages/AddRecipe";
 import { ExportShoppingList } from "../pages/ExportShoppingList";
 import { NotFound } from "../pages/NotFound";
 import { useAuth } from "../auth/useAuth";
+import { SampleSitemap } from "../utils/SampleSitemap";
 
 /**
  * Route map:
@@ -23,15 +25,16 @@ import { useAuth } from "../auth/useAuth";
 export function AppRoutes() {
     const auth = useAuth();
     
-    useEffect(() => {
-        // FOR TESTING ONLY:
-        // every time the page refreshes, log out the user so we can test the login flow
-        auth.logout();
-    }, []);
+    //useEffect(() => {
+    //    // FOR TESTING ONLY:
+    //    // every time the page refreshes, log out the user so we can test the login flow
+    //    auth.logout();
+    //}, []);
 
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
             <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<BrowseRecipes />} />

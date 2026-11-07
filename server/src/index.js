@@ -1,11 +1,78 @@
 import path from "path";
 import { readFileSync } from "fs";
 import express from "express";
+import session from 'express-session';
+import bodyParser from 'body-parser';
+import fs from "fs";//for reading the sample user database
 
 const app = express();
 
-// From Albert: I also added backend support for fetching a recipe by its ID. Of course, this isn't permanent and will be replaced,
-// by a database, but it's proof that the functionality works.
+// Parse request bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// Configure sessions
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+}));
+
+
+// Login route
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    // Sample user database
+    var users = [];
+    try {
+        users = JSON.parse(fs.readFileSync('../sample_data/users.json', 'utf8'));
+    } catch (err) {
+        console.error(err);
+    }
+
+    const user = users.find(
+        u => u.username === username && u.password === password
+    );
+
+    if (!user) {
+        return res.status(401).json({ message: "Invalid username or password." });
+    }
+
+    req.session.user = {
+        id: user.id,
+        username: user.username
+    };
+
+    res.json({
+        message: "Login successful",
+        user: req.session.user
+    });
+});
+
+// Protected route
+app.get('/profile', (req, res) => {
+    // Check if user is logged in
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    
+    res.json({ message: 'Profile accessed', user: req.session.user });
+});
+
+// Logout route
+app.post('/logout', (req, res) => {
+    // Destroy session
+    req.session.destroy((err) => {
+        if (err) {
+        return res.status(500).json({ message: 'Logout failed' });
+        }
+        res.json({ message: 'Logout successful' });
+    });
+});
+
 const isProd = !process.argv.includes("--dev");
 const clientDist = path.resolve(import.meta.dirname, "../../client/dist");
 const recipesPath = path.resolve(import.meta.dirname, "../../sample_data/recipes.json");

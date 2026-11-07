@@ -20,13 +20,30 @@ export function AuthProvider({ children }) {
         setIsLoading(false);
     }, []);
 
-    async function login(email, password) {
-        // TODO: replace with a real API call
-        // this is just a template for now
-        const fakeUser = { id: "1", username: "sample123", email, firstName: "Sample", lastName: "User" };
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(fakeUser));
-        setUser(fakeUser);
-        return fakeUser;
+    async function login(username, password) {
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
+
+        const data = await response.json();
+
+        // Reject unsuccessful login attempts
+        if (!response.ok) {
+            throw new Error(data.message || "Invalid credentials");
+        }
+
+        // Store authenticated user in React state
+        setUser(data.user);
+
+        return data.user;
     }
 
     function logout() {
