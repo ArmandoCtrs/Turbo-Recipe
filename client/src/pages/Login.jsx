@@ -58,16 +58,17 @@ export function Login() {
                 <label htmlFor="password">Password</label>
                 <input type="password" placeholder="Enter Password" name="password" required />
 
-                <button type="submit">Login</button>
-
-                <label>
+                <label className="rememeber-checkbox">
                     <input
+                        className="rememeber-checkbox"
                         type="checkbox"
                         defaultChecked={true}
                         name="remember"
                     />{" "}
                     Remember me
                 </label>
+
+                <button type="submit">Login</button>
 
                 <button type="reset">Cancel</button>
                 {loginError && (
