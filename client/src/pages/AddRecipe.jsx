@@ -2,11 +2,6 @@ import { useState } from "react";
 import { Layout } from "../components/Layout";
 import { SampleSitemap } from "../utils/SampleSitemap";
 
-interface RecipeForm {
-    title: string;
-    ingredients: string;
-    instructions: string;
-}
 
 export function AddRecipe() {
     const [form, setForm] = useState<RecipeForm>({
