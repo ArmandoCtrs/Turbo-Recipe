@@ -19,10 +19,6 @@ export function AddRecipe() {
                 <p>
                     Title
                     <input
-                    select {
-                        display: block;
-                    margin-bottom: 15px
-                    }
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
