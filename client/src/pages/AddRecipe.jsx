@@ -10,12 +10,7 @@ export function AddRecipe() {
         instructions: "",
     });
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    };
+   
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
