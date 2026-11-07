@@ -90,6 +90,7 @@ export function ProfileDropdown({ user }) {
             {open && (
                 <div style={styles.menu}>
                     <button className="menu-button" onClick={() => navigate("/shopping-list/export")}>Shopping List</button>
+                     <button className="menu-button" onClick={() => navigate("/add-recipe/export")}>Add Recipe</button>
                     <button className="menu-button" onClick={() => logout()}>Log Out</button>
                 </div>
             )}
