@@ -26,22 +26,14 @@ export function AddRecipe() {
                 </p>
                 <p>
                     Ingredients
-                    <textarea,
-                     select {
-                        display: block;
-                    margin-bottom: 15px
-                    }
+                    <textarea
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
                     />
                 </p>
                 <p>
                     Steps
-                    <textarea,
-                     select {
-                        display: block;
-                    margin-bottom: 15px
-                    }
+                    <textarea
                         value={steps}
                         onChange={(e) => setSteps(e.target.value)}
                     />
