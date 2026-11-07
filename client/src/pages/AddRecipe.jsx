@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Layout } from "../components/Layout";
+import { SampleSitemap } from "../utils/SampleSitemap";
 
 export function AddRecipe() {
     const [title, setTitle] = useState("");
