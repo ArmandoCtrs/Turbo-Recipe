@@ -2,14 +2,17 @@ import { useState } from "react";
 import { Layout } from "../components/Layout";
 import { SampleSitemap } from "../utils/SampleSitemap";
 
-
 export function AddRecipe() {
-    const [form, setForm] = useState<RecipeForm>({
-        title: "",
-        ingredients: "",
-        instructions: "",
-    });
-    
+    const [title, setTitle] = useState("");
+    const [ingredients, setIngredients] = useState("");
+    const [steps, setSteps] = useState("");
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log({ title, ingredients, steps });
+        // TODO: send to your API
+    };
+
     return (
         <Layout>
             <h1>Add Recipe</h1>
@@ -17,36 +20,27 @@ export function AddRecipe() {
                 <label>
                     Title
                     <input
-                        name="title"
-                        value={form.title}
-                        onChange={handleChange}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         required
                     />
                 </label>
-
                 <label>
                     Ingredients (one per line)
                     <textarea
-                        name="ingredients"
-                        value={form.ingredients}
-                        onChange={handleChange}
-                        rows={6}
+                        value={ingredients}
+                        onChange={(e) => setIngredients(e.target.value)}
                     />
                 </label>
-
                 <label>
-                    Instructions
+                    Steps
                     <textarea
-                        name="instructions"
-                        value={form.instructions}
-                        onChange={handleChange}
-                        rows={8}
+                        value={steps}
+                        onChange={(e) => setSteps(e.target.value)}
                     />
                 </label>
-
-                <button type="submit">Save Recipe</button>
+                <button type="submit">Save recipe</button>
             </form>
-
             <SampleSitemap />
         </Layout>
     );
