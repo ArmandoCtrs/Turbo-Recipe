@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Layout } from "../components/Layout";
-import { SampleSitemap } from "../utils/SampleSitemap";
 
 export function AddRecipe() {
     const [title, setTitle] = useState("");
@@ -41,7 +40,6 @@ export function AddRecipe() {
                 </label>
                 <button type="submit">Save recipe</button>
             </form>
-            <SampleSitemap />
         </Layout>
     );
 }
