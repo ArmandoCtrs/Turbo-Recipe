@@ -7,7 +7,7 @@ import { AppIcon } from "./AppIcon";
 
 export function AppLogo() {
     const navigate = useNavigate();
-    
+
     return (
         <div id="logo" onClick={() => navigate("/")}>
             <AppIcon />
@@ -90,6 +90,7 @@ export function ProfileDropdown({ user }) {
             {open && (
                 <div style={styles.menu}>
                     <button className="menu-button" onClick={() => navigate("/shopping-list/export")}>Shopping List</button>
+                    <button className="menu-button" onClick={() => navigate("/recipes/new")}>Add Recipe</button>
                     <button className="menu-button" onClick={() => logout()}>Log Out</button>
                 </div>
             )}
