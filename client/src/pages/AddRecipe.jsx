@@ -4,11 +4,11 @@ import { Layout } from "../components/Layout";
 export function AddRecipe() {
     const [title, setTitle] = useState("");
     const [ingredients, setIngredients] = useState("");
-    const [steps, setSteps] = useState("");
+    const [instructions, setInstructions] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({ title, ingredients, steps });
+        console.log({ title, ingredients, instructions });
        
     };
 
@@ -34,11 +34,11 @@ export function AddRecipe() {
                     />
                 </p>
                 <p>
-                    Steps
+                    Instructions
                     <textarea
                         style={{ display: "block" }}
-                        value={steps}
-                        onChange={(e) => setSteps(e.target.value)}
+                        value={instructions}
+                        onChange={(e) => setInstructions(e.target.value)}
                     />
                 </p>
                 <button type="submit">Save recipe</button>
