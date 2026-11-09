@@ -13,6 +13,9 @@ const styles = {
         maxWidth: 800,
         margin: "0 auto",
         padding: "24px 20px 48px",
+        height: "100%",
+        flex: 1,
+        overflowY: "auto",
     },
     backLink: {
         display: "inline-block",
