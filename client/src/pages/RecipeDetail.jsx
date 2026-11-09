@@ -11,6 +11,7 @@ import { Layout } from "../components/Layout";
 const styles = {
     page: {
         maxWidth: 800,
+        width: "100%",
         margin: "0 auto",
         padding: "24px 20px 48px",
         height: "100%",
