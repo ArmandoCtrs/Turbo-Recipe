@@ -67,9 +67,11 @@ export function Login() {
                     Remember me
                 </label>
 
-                <button type="submit">Login</button>
-
-                <button type="reset">Cancel</button>
+                <label>
+                    <button type="submit">Login</button>
+                    <button type="reset">Cancel</button>
+                </label>
+                
                 {loginError && (
                     <p role="alert" style={{ color: "red" }}>
                         {loginError}

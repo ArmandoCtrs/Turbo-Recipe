@@ -31,7 +31,7 @@ input[type="search"]::-webkit-search-cancel-button {
     box-sizing: border-box;
     width: 100%;
     max-width: 60rem;
-    height: 100dvh;
+    min-height: 100dvh;
     margin-inline: auto;
     padding: 0.8rem clamp(1.25rem, 4vw, 2rem);
     border-inline: 1px solid #c6cbd3;

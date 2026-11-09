@@ -43,7 +43,9 @@ app.post("/login", (req, res) => {
 
     req.session.user = {
         id: user.id,
-        username: user.username
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName
     };
 
     res.json({

@@ -2,7 +2,7 @@
   {
     "id": "r1",
     "name": "Classic Spaghetti Carbonara",
-    "author": "u1",
+    "author": "maria_cooks",
     "tags": ["italian", "pasta", "dinner"],
     "description": "Creamy Roman pasta made with eggs, pecorino, and crispy guanciale.",
     "ingredients": [
@@ -18,7 +18,7 @@
   {
     "id": "r2",
     "name": "Chicken Tikka Masala",
-    "author": "u3",
+    "author": "veggie_priya",
     "tags": ["indian", "chicken", "dinner", "curry"],
     "description": "Tender marinated chicken in a spiced tomato cream sauce.",
     "ingredients": [
@@ -38,7 +38,7 @@
   {
     "id": "r3",
     "name": "Vegan Chickpea Salad Sandwich",
-    "author": "u3",
+    "author": "veggie_priya",
     "tags": ["vegan", "lunch", "sandwich", "quick"],
     "description": "A no-cook, protein-packed take on classic chicken salad.",
     "ingredients": [
@@ -56,7 +56,7 @@
   {
     "id": "r4",
     "name": "Fluffy Buttermilk Pancakes",
-    "author": "u4",
+    "author": "bakerjen",
     "tags": ["breakfast", "baking", "vegetarian"],
     "description": "Light, tall pancakes perfect for weekend mornings.",
     "ingredients": [
@@ -74,7 +74,7 @@
   {
     "id": "r5",
     "name": "Beef Tacos",
-    "author": "u2",
+    "author": "chefdave",
     "tags": ["mexican", "beef", "dinner", "quick"],
     "ingredients": [
       "500g ground beef",
@@ -91,7 +91,7 @@
   {
     "id": "r6",
     "name": "Garlic Butter Shrimp",
-    "author": "u1",
+    "author": "maria_cooks",
     "tags": ["seafood", "dinner", "quick", "low-carb"],
     "description": "Ready in 15 minutes with just a handful of ingredients.",
     "ingredients": [
@@ -109,7 +109,7 @@
   {
     "id": "r7",
     "name": "Chocolate Chip Cookies",
-    "author": "u4",
+    "author": "bakerjen",
     "tags": ["dessert", "baking", "vegetarian", "cookies"],
     "description": "Chewy in the middle with crisp, golden edges.",
     "ingredients": [
@@ -128,7 +128,7 @@
   {
     "id": "r8",
     "name": "Veggie Stir-Fry with Tofu",
-    "author": "u3",
+    "author": "veggie_priya",
     "tags": ["vegan", "asian", "dinner", "gluten-free"],
     "description": "A colorful weeknight stir-fry with crispy tofu.",
     "ingredients": [
@@ -148,7 +148,7 @@
   {
     "id": "r9",
     "name": "Hearty Beef Chili",
-    "author": "u2",
+    "author": "chefdave",
     "tags": ["beef", "dinner", "soup", "spicy"],
     "description": "A thick, slow-simmered chili that tastes even better the next day.",
     "ingredients": [
@@ -168,7 +168,7 @@
   {
     "id": "r10",
     "name": "Greek Salad",
-    "author": "u1",
+    "author": "maria_cooks",
     "tags": ["salad", "vegetarian", "gluten-free", "lunch", "quick"],
     "ingredients": [
       "3 large tomatoes, cut into wedges",
