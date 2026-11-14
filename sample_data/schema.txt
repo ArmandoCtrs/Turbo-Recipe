@@ -8,6 +8,7 @@ USER:
 - Username     (str)
 - First name   (str)
 - Last name    (str)
+- Favorites    (RECIPE[] id)
 
 RECIPE:
 - ID
@@ -20,8 +21,10 @@ RECIPE:
 
 SHOPPING LIST:
 - ID
+- Name         (str)
 - User         (USER id)
 - Recipes      (RECIPE[] id)
+- Created at   (date)
 
 ======
 Notes about some design decisions I made:

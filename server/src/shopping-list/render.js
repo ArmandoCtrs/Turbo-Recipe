@@ -153,4 +153,4 @@ function renderItemLine(item) {
   return { line: `${name}: ${text}`, warnings };
 }
 
-module.exports = { renderQuantity, renderItemLine, safeEval, snap, formatNumber };
+export { renderQuantity, renderItemLine, safeEval, snap, formatNumber };

@@ -204,7 +204,7 @@ Before answering, verify:
 - no joined volume+volume or weight+weight
 - no "many" on abbreviations; "many" present on every full-word unit
 - no "as needed + more as needed"
-- every item name singular
+- every item name lowercase and singular (except foods normally sold in the plural)
 - every input string appears exactly once in sources or unparsed
 - there are {{TOTAL_STRINGS}} ingredient strings in total across all recipes.
 - the "sources" arrays plus "unparsed" contains exactly {{TOTAL_STRINGS}} strings.
