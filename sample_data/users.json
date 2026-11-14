@@ -30,5 +30,13 @@
     "lastName": "Okafor",
     "password": "password",
     "email": "bakerjen@example.com"
+  },
+  {
+    "id": "u5",
+    "username": "register_test",
+    "firstName": "register",
+    "lastName": "test",
+    "password": "password",
+    "email": "rt@example.com"
   }
 ]

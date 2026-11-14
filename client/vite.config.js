@@ -11,6 +11,7 @@ export default defineConfig({
                 changeOrigin: true,
             },
             "/login": "http://localhost:3001",
+            "/register": "http://localhost:3001",
             "/logout": "http://localhost:3001",
         },
     },

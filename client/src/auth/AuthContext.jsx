@@ -48,6 +48,37 @@ export function AuthProvider({ children }) {
         return data.user;
     }
 
+    async function register(username, firstName, lastName, password, passwordVerify, email) {
+        const response = await fetch("/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                username,
+                firstName,
+                lastName,
+                password,
+                passwordVerify,
+                email
+            })
+        });
+
+        const data = await response.json();
+
+        // Reject unsuccessful login attempts
+        if (!response.ok) {
+            throw new Error(data.message || "Error registering new account");
+        }
+
+        // Store authenticated user in React state
+        setUser(data.user);
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user)); // persist session
+
+        return data.user;
+    }
+
     function logout() {
         // TODO: invalidate the token/session in the backend
         window.localStorage.removeItem(STORAGE_KEY);
@@ -59,6 +90,7 @@ export function AuthProvider({ children }) {
         isAuthenticated: Boolean(user),
         isLoading,
         login,
+        register,
         logout,
     };
 

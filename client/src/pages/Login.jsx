@@ -36,7 +36,7 @@ export function Login() {
         } catch (error) {
             console.error("Login failed:", error);
 
-            setLoginError(error.message || "Invalid username or password.");
+            setLoginError(error.message || "Error creating new account.");
         }
     }
 
@@ -77,6 +77,7 @@ export function Login() {
                         {loginError}
                     </p>
                 )}
+
                 <br />
                 <Link to="/forgot-password">Forgot password?</Link>
                 <br />

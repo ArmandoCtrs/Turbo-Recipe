@@ -20,6 +20,63 @@ app.use(session({
     cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
 
+const usersPath = path.resolve(import.meta.dirname, "../../sample_data/users.json");
+
+// Register route
+app.post("/register", (req, res) => {
+    const { username, firstName, lastName, password, passwordVerify, email } = req.body;
+
+    let users;
+    try {
+        users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Unable to load user records." });
+    }
+
+    const user = users.find(
+        u => u.username === username || u.email === email
+    );
+
+    if (user) {
+        return res.status(409).json({ message: "Username or email already in use." });
+    }
+
+    if (password !== passwordVerify) {
+        return res.status(422).json({ message: "Passwords do not match." });
+    }
+
+    // create new user
+    var newUser = {
+        "id": "u" + (users.length + 1),
+        "username": username,
+        "firstName": firstName,
+        "lastName": lastName,
+        "password": password,
+        "email": email
+    };
+
+    try {
+        users.push(newUser);
+        fs.writeFileSync(usersPath, `${JSON.stringify(users, null, 2)}\n`, "utf8");
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Unable to save the new account." });
+    }
+
+    req.session.user = {
+        id: newUser.id,
+        username: newUser.username,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName
+    };
+
+    res.json({
+        message: "Registration successful. You are now logged in",
+        user: req.session.user
+    });
+});
+
 
 // Login route
 app.post("/login", (req, res) => {
@@ -28,7 +85,7 @@ app.post("/login", (req, res) => {
     // Sample user database
     var users = [];
     try {
-        users = JSON.parse(fs.readFileSync('../sample_data/users.json', 'utf8'));
+        users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
     } catch (err) {
         console.error(err);
     }

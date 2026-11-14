@@ -3,7 +3,7 @@ import { AuthContext } from "./AuthContext";
  
 /**
  * useAuth() — call this anywhere in the tree (below <AuthProvider>) to get:
- *   { user, isAuthenticated, isLoading, login, logout }
+ *   { user, isAuthenticated, isLoading, login, register, logout }
  */
 export function useAuth() {
     const ctx = useContext(AuthContext);
