@@ -1,3 +1,9 @@
+const CATEGORIES = [
+    "Produce", "Meat & Seafood", "Dairy & Eggs", "Bakery & Bread",
+    "Pantry & Dry Goods", "Spices & Seasonings", "Condiments & Sauces",
+    "Frozen", "Beverages & Alcohol", "Other",
+];
+
 const PROMPT = `
 You are a meticulous grocery-shopping assistant. I will give you ingredient
 lists from several recipes. Combine them into one unified shopping list,
