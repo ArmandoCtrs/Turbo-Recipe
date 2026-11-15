@@ -5,6 +5,12 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import fs from "fs";//for reading the sample user database
 
+process.loadEnvFile("../.env");
+
+if (!(process.env.SESSION_SECRET && process.env.LLM_API_KEY)) {
+    throw new Error(".env file not properly configured. See .env.example for additional information");
+}
+
 const app = express();
 
 // Parse request bodies
@@ -14,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure sessions
 app.use(session({
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 } // 24 hours
@@ -96,6 +102,24 @@ app.get("/api/recipes/:recipeId", (req, res) => {
     }
 
     res.json(recipe);
+});
+
+
+// Create a new shopping list
+app.post("/api/users/:userId/shopping-list/new", (req, res) => {
+    if (!req.session.user || req.session.user.id === req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+});
+
+
+// Get all user's shopping lists
+app.get("/api/users/:userId/shopping-list", (req, res) => {
+    if (!req.session.user || req.session.user.id === req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    
 });
 
 // from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html
