@@ -5,6 +5,10 @@ import express from "express";
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import fs from "fs";//for reading the sample user database
+import { createShoppingList } from "./shopping-list";
+
+// TODO: remove this once you set up mongo
+const SHOPPING_LISTS = [];
 
 process.loadEnvFile("../.env");
 
@@ -26,7 +30,6 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
-
 
 // Login route
 app.post("/login", (req, res) => {
@@ -99,7 +102,7 @@ app.get("/api/recipes/:recipeId", (req, res) => {
 
     // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
     if (!recipe) {
-        return res.status(404).json({ error: "Recipe not found." });
+        return res.status(404).json({ message: "Recipe not found." });
     }
 
     res.json(recipe);
@@ -107,20 +110,79 @@ app.get("/api/recipes/:recipeId", (req, res) => {
 
 
 // Create a new shopping list
-app.post("/api/users/:userId/shopping-list/new", (req, res) => {
-    if (!req.session.user || req.session.user.id === req.params.userId) {
+app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    try {
+        const lst = await createShoppingList(req.body.recipes, ai);
+        const shoppingList = {
+            id: Math.random().toString(36).slice(2),
+            name: req.body.name,
+            user: req.session.user.id,
+            createdAt: Date.now(),
+            contents: lst,
+        }
+        SHOPPING_LISTS.push(shoppingList);
+        res.json(shoppingList);
+    } catch (err) {
+        res.status(err.status ?? 500)
+            .json({ 
+                message: err.status ? err.message : "Something went wrong" 
+            });
     }
 });
 
-
-// Get all user's shopping lists
-app.get("/api/users/:userId/shopping-list", (req, res) => {
-    if (!req.session.user || req.session.user.id === req.params.userId) {
+// Delete a shopping list
+app.delete("/api/users/:userId/shopping-list/:listId", (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
+    const i = SHOPPING_LISTS.findIndex(lst =>
+        lst.id === req.params.listId &&
+        lst.user === req.session.user.id
+    );
 
+    if (i !== -1) {
+        SHOPPING_LISTS.splice(i, 1);
+        res.json({ message: "Success" });
+    } else {
+        res.status(404).send({ error: "Not found" });
+    }
+});
+
+// Get all user's shopping lists
+app.get("/api/users/:userId/shopping-list", (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    res.json(SHOPPING_LISTS.filter(lst => {
+        return lst.user === req.session.user.id;
+    }));
+});
+
+// Get just one shopping list
+app.get("/api/users/:userId/shopping-list/:listId", (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const shoppingList = SHOPPING_LISTS.find(lst => {
+        return lst.id === req.params.listId;
+    });
+
+    if (!shoppingList) {
+        return res.status(404).json({ message: 'Not found' });
+    }
+
+    if (shoppingList.user !== req.session.user.id) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    res.json(shoppingList);
 });
 
 // from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html

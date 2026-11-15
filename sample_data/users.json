@@ -5,7 +5,8 @@
     "firstName": "Maria",
     "lastName": "Santos",
     "password": "password",
-    "email": "maria.cooks@example.com"
+    "email": "maria.cooks@example.com",
+    "favorites": ["r1", "r6", "r12", "r21", "r23", "r25"]
   },
   {
     "id": "u2",
@@ -13,7 +14,8 @@
     "firstName": "Dave",
     "lastName": "Thompson",
     "password": "password123",
-    "email": "chefdave@example.com"
+    "email": "chefdave@example.com",
+    "favorites": ["r5", "r9", "r11", "r20", "r23"]
   },
   {
     "id": "u3",
@@ -21,7 +23,8 @@
     "firstName": "Priya",
     "lastName": "Patel",
     "password": "password",
-    "email": "veggie_priya@example.com"
+    "email": "veggie_priya@example.com",
+    "favorites": ["r3", "r8", "r13", "r16", "r18", "r24"]
   },
   {
     "id": "u4",
@@ -29,6 +32,7 @@
     "firstName": "Jennifer",
     "lastName": "Okafor",
     "password": "password",
-    "email": "bakerjen@example.com"
+    "email": "bakerjen@example.com",
+    "favorites": ["r4", "r7", "r14", "r19", "r22"]
   }
 ]
