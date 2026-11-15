@@ -7,9 +7,6 @@ import bodyParser from 'body-parser';
 import fs from "fs";//for reading the sample user database
 import { createShoppingList } from "./shopping-list";
 
-// TODO: remove this once you set up mongo
-const SHOPPING_LISTS = [];
-
 process.loadEnvFile("../.env");
 
 if (!(process.env.SESSION_SECRET && process.env.LLM_API_KEY)) {
@@ -89,17 +86,24 @@ app.post('/logout', (req, res) => {
 const isProd = !process.argv.includes("--dev");
 const clientDist = path.resolve(import.meta.dirname, "../../client/dist");
 const recipesPath = path.resolve(import.meta.dirname, "../../sample_data/recipes.json");
-const recipes = JSON.parse(readFileSync(recipesPath, "utf8"));
+
+// TODO: remove this once you set up mongo
+const RECIPES = JSON.parse(readFileSync(recipesPath, "utf8"));
+const SHOPPING_LISTS = [];
 
 app.get("/api/ping", (req, res) => {
     res.json({ message: "up", timestamp: Date.now() });
+});
+
+app.get("/api/recipes", (req, res) => {
+    res.json(RECIPES);
 });
 
 // From Albert: Added an endpoint for recipe fetches by ID, 
 // allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
 // After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.
 app.get("/api/recipes/:recipeId", (req, res) => {
-    const recipe = recipes.find((item) => item.id === req.params.recipeId);
+    const recipe = RECIPES.find((item) => item.id === req.params.recipeId);
 
     // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
     if (!recipe) {
@@ -123,7 +127,7 @@ app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
         }
         
         try {
-            const selected = resolveRecipes(req.body.recipes, recipes);
+            const selected = resolveRecipes(req.body.recipes, RECIPES);
         } catch (err) {
             return res.status(400).json({ message: "Invalid list of recipes" })
         }

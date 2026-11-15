@@ -7,8 +7,6 @@ These functions will be called on the individual pages and handle all the fetchi
 
 import { useState, useEffect } from "react";
 
-import SAMPLE_RECIPES from "../../../sample_data/recipes.json";
-
 // catch errors
 async function handleResponse(response, fallbackMessage) {
     if (!response.ok) {
@@ -17,17 +15,17 @@ async function handleResponse(response, fallbackMessage) {
         err.status = response.status;
         throw err;
     }
-    return response.json();
+    return await response.json();
 }
 
 
 export function useRecipes() {
     const [recipes, setRecipes] = useState(null);
     useEffect(() => {
-        // TODO: run the actual fetch() call: this is just a placeholder for now
-        setTimeout(() => {
-            setRecipes(SAMPLE_RECIPES);
-        }, 500); // sample 500ms delay to simulate a fetch call
+        (async () => {
+            const response = await fetch(`/api/recipes`);
+            setRecipes(await response.json())
+        })(); 
     }, []);
 
     return recipes;
@@ -38,14 +36,13 @@ export function useRecipes() {
    This was also a part of the code that CoPilot generated as part of RecipeDetail's functionality. See the prompt at the top of RecipeDetail.jsx for reference. */
 export async function getRecipe(recipeId) {
     const response = await fetch(`/api/recipes/${encodeURIComponent(recipeId)}`);
-    return handleResponse(response, "Unable to load recipe");
+    return handleResponse(response, "Unable to load recipe.");
 }
 
 const listsUrl = (userId) => `/api/users/${encodeURIComponent(userId)}/shopping-list`;
 
 
-// Create a new shopping list from an array of recipe objects (the same objects
-// returned by useRecipes() / getRecipe()).
+// Create a new shopping list from an array of recipe IDs
 export async function createShoppingList(userId, name, recipeIds) {
     const response = await fetch(`${listsUrl(userId)}/new`, {
         method: "POST",
