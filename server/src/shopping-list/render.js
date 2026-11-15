@@ -147,10 +147,4 @@ function renderQuantity(quantity, opts = {}) {
   return { text, warnings };
 }
 
-function renderItemLine(item) {
-  const { text, warnings } = renderQuantity(item.quantity, { approximate: item.approximate });
-  const name = item.item ? item.item[0].toUpperCase() + item.item.slice(1) : "";
-  return { line: `${name}: ${text}`, warnings };
-}
-
-export { renderQuantity, renderItemLine, safeEval, snap, formatNumber };
+export { renderQuantity, safeEval, snap, formatNumber };

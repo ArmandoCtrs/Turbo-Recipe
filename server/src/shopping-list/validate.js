@@ -1,6 +1,4 @@
-"use strict";
-
-import { renderItemLine } from "./render";
+import { renderQuantity } from "./render.js";
 
 const CATEGORIES = [
   "Produce", "Meat & Seafood", "Dairy & Eggs", "Bakery & Bread",
@@ -76,7 +74,9 @@ function validateAndRender(recipes, response) {
   const rendered = response.categories.map((cat) => ({
     name: cat.name,
     lines: cat.items.map((item) => {
-      const { line, warnings } = renderItemLine(item);
+      const { text, warnings } = renderQuantity(item.quantity, {
+        approximate: item.approximate
+      });
       for (const w of warnings) {
         const msg = `"${item.item}": ${w.message}`;
         (w.level === "critical" ? critical : softWarnings).push(msg);
@@ -84,7 +84,12 @@ function validateAndRender(recipes, response) {
       for (const r of item.recipes ?? []) {
         if (!recipeNames.has(r)) softWarnings.push(`"${item.item}": unknown recipe name "${r}"`);
       }
-      return { line, item, sources: item.sources };
+      return {
+        item: item.item,
+        quantity: text,
+        recipes: item.recipes ?? [],
+        sources: item.sources
+      };
     }),
   }));
 

@@ -5,7 +5,7 @@ import express from "express";
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import fs from "fs";//for reading the sample user database
-import { createShoppingList } from "./shopping-list";
+import { createShoppingList, resolveRecipes } from "./shopping-list/index.js";
 
 process.loadEnvFile("../.env");
 
@@ -14,7 +14,10 @@ if (!(process.env.SESSION_SECRET && process.env.LLM_API_KEY)) {
 }
 
 const app = express();
-const ai = new GoogleGenAI({ apiKey: process.env.LLM_API_KEY });
+const ai = new GoogleGenAI({ 
+    apiKey: process.env.LLM_API_KEY,
+    apiVersion: "v1beta"
+});
 
 // Parse request bodies
 app.use(bodyParser.json());
@@ -125,10 +128,13 @@ app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
         if (!name || name.length > 100) {
             return res.status(400).json({ message: "A list name (max 100 characters) is required" });
         }
+
+        let selected;
         
         try {
-            const selected = resolveRecipes(req.body.recipes, RECIPES);
+            selected = resolveRecipes(req.body.recipes, RECIPES);
         } catch (err) {
+            console.log(err)
             return res.status(400).json({ message: "Invalid list of recipes" })
         }
         
@@ -144,6 +150,7 @@ app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
         SHOPPING_LISTS.push(shoppingList);
         res.json(shoppingList);
     } catch (err) {
+        console.error(err);
         res.status(err.status ?? 500)
             .json({ 
                 message: err.status ? err.message : "Something went wrong" 

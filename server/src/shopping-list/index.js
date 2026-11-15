@@ -348,20 +348,28 @@ export function sortRendered(rendered) {
     })
     .map(([name, lines]) => ({
       name,
-      lines: [...lines].sort((x, y) => x.item.item.localeCompare(y.item.item)),
+      lines: [...lines].sort((x, y) => x.item.localeCompare(y.item)),
     }));
 }
 
 // ---------- top-level ----------
-export async function createShoppingList(recipes, ai) {
-  const problem = validateRecipesInput(recipes);
-  if (problem) {
-    const err = new Error(problem);
-    err.status = 400;
-    throw err;
+export async function createShoppingList(recipeList, ai) {
+  if (
+    !Array.isArray(recipeList) ||
+    recipeList.some((r) => !r || typeof r.name !== "string" || !Array.isArray(r.ingredients))
+  ) {
+    throw new Error("recipes must be an array of recipe objects with a name and ingredients");
   }
 
-  const result = await buildShoppingList(recipes, makeCallModel(ai));
+  // Do the mapping here: recipe objects -> { "Recipe name": [ingredients] }
+  const { payload, idByKey } = buildRecipesPayload(recipeList);
+
+  const problem = validateRecipesInput(payload);
+  if (problem) throw new Error(problem);
+
+  // Pass the payload map (not the recipe objects). The validator's coverage
+  // check compares the model's sources against these exact strings.
+  const result = await buildShoppingList(payload, makeCallModel(ai));
 
   // One structured log line per request: this is how you learn what to tighten next.
   console.log(JSON.stringify({
@@ -376,11 +384,16 @@ export async function createShoppingList(recipes, ai) {
     ok: result.ok,
     categories: sortRendered(result.rendered ?? []).map((c) => ({
       name: c.name,
-      items: c.lines.map((l) => ({
-        text: l.line,
-        recipes: l.item.recipes ?? [],
-        sources: l.sources,
-      })),
+      items: c.lines.map((l) => {
+        const names = l.recipes ?? [];
+
+        return {
+          item: l.item,
+          quantity: l.quantity,
+          recipes: names,
+          sources: l.sources,
+        };
+      }),
     })),
     // Strings the model could not interpret, plus any it dropped after all retries.
     // Show both to the user verbatim so nothing disappears.

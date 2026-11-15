@@ -10,7 +10,6 @@ export function AuthProvider({ children }) {
     // On first load, restore any existing session (e.g. from a stored token).
     useEffect(() => {
         const stored = window.localStorage.getItem(STORAGE_KEY);
-        console.log(stored, JSON.parse(stored));
         if (stored) {
             try {
                 setUser(JSON.parse(stored));
