@@ -55,7 +55,8 @@ app.post("/login", (req, res) => {
         id: user.id,
         username: user.username,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        favorites: user.favorites,
     };
 
     res.json({
@@ -116,10 +117,22 @@ app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
     }
 
     try {
-        const lst = await createShoppingList(req.body.recipes, ai);
+        const name = typeof req.body.name === "string" ? req.body.name.trim() : "";
+        if (!name || name.length > 100) {
+            return res.status(400).json({ message: "A list name (max 100 characters) is required" });
+        }
+        
+        try {
+            const selected = resolveRecipes(req.body.recipes, recipes);
+        } catch (err) {
+            return res.status(400).json({ message: "Invalid list of recipes" })
+        }
+        
+        const lst = await createShoppingList(selected, ai);
+
         const shoppingList = {
             id: Math.random().toString(36).slice(2),
-            name: req.body.name,
+            name: name,
             user: req.session.user.id,
             createdAt: Date.now(),
             contents: lst,
@@ -149,7 +162,7 @@ app.delete("/api/users/:userId/shopping-list/:listId", (req, res) => {
         SHOPPING_LISTS.splice(i, 1);
         res.json({ message: "Success" });
     } else {
-        res.status(404).send({ error: "Not found" });
+        res.status(404).send({ message: "Not found" });
     }
 });
 
@@ -187,7 +200,7 @@ app.get("/api/users/:userId/shopping-list/:listId", (req, res) => {
 
 // from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html
 app.use("/api", (req, res) => {
-    res.status(404).json({ error: "Not found." });
+    res.status(404).json({ message: "Not found." });
 });
 
 if (isProd) {

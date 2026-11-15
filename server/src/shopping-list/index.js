@@ -223,6 +223,31 @@ const MAX_RECIPES = 30;
 const MAX_STRINGS = 300;
 const MAX_STRING_LENGTH = 200;
 
+export function resolveRecipes(ids, allRecipes) {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("recipes must be a non-empty array of recipe ids");
+  }
+  if (ids.length > MAX_RECIPES) throw new Error(`too many recipes (max ${MAX_RECIPES})`);
+  if (!ids.every((id) => typeof id === "string")) throw new Error("recipe ids must be strings");
+
+  const unique = [...new Set(ids)];
+  const byId = new Map(allRecipes.map((r) => [r.id, r]));
+  const unknown = unique.filter((id) => !byId.has(id));
+  if (unknown.length) throw new Error(`unknown recipe ids: ${unknown.join(", ")}`);
+
+  return unique.map((id) => byId.get(id));
+}
+
+export function buildRecipesPayload(recipeList) {
+  const idByKey = new Map();
+  const entries = recipeList.map((recipe) => {
+    const key = idByKey.has(recipe.name) ? `${recipe.name} (${recipe.id})` : recipe.name;
+    idByKey.set(key, recipe.id);
+    return [key, recipe.ingredients];
+  });
+  return { payload: Object.fromEntries(entries), idByKey };
+}
+
 export function validateRecipesInput(recipes) {
   if (!recipes || typeof recipes !== "object" || Array.isArray(recipes)) {
     return "recipes must be an object mapping recipe names to arrays of strings";

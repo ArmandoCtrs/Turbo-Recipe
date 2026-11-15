@@ -9,6 +9,18 @@ import { useState, useEffect } from "react";
 
 import SAMPLE_RECIPES from "../../../sample_data/recipes.json";
 
+// catch errors
+async function handleResponse(response, fallbackMessage) {
+    if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        const err = new Error(body.message ?? fallbackMessage);
+        err.status = response.status;
+        throw err;
+    }
+    return response.json();
+}
+
+
 export function useRecipes() {
     const [recipes, setRecipes] = useState(null);
     useEffect(() => {
@@ -26,11 +38,39 @@ export function useRecipes() {
    This was also a part of the code that CoPilot generated as part of RecipeDetail's functionality. See the prompt at the top of RecipeDetail.jsx for reference. */
 export async function getRecipe(recipeId) {
     const response = await fetch(`/api/recipes/${encodeURIComponent(recipeId)}`);
+    return handleResponse(response, "Unable to load recipe");
+}
 
-    if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        throw new Error(body.error ?? "Unable to load recipe.");
-    }
+const listsUrl = (userId) => `/api/users/${encodeURIComponent(userId)}/shopping-list`;
 
-    return response.json();
+
+// Create a new shopping list from an array of recipe objects (the same objects
+// returned by useRecipes() / getRecipe()).
+export async function createShoppingList(userId, name, recipeIds) {
+    const response = await fetch(`${listsUrl(userId)}/new`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, recipes: recipeIds }),
+    });
+    return handleResponse(response, "Unable to create shopping list.");
+}
+
+// Get all of a user's shopping lists.
+export async function getShoppingLists(userId) {
+    const response = await fetch(listsUrl(userId));
+    return handleResponse(response, "Unable to load shopping lists.");
+}
+
+// Get one shopping list by id.
+export async function getShoppingList(userId, listId) {
+    const response = await fetch(`${listsUrl(userId)}/${encodeURIComponent(listId)}`);
+    return handleResponse(response, "Unable to load shopping list.");
+}
+
+// Delete a shopping list. Resolves to { message: "Success" }.
+export async function deleteShoppingList(userId, listId) {
+    const response = await fetch(`${listsUrl(userId)}/${encodeURIComponent(listId)}`, {
+        method: "DELETE",
+    });
+    return handleResponse(response, "Unable to delete shopping list.");
 }
