@@ -1,5 +1,6 @@
 import path from "path";
 import { readFileSync } from "fs";
+import { GoogleGenAI } from '@google/genai';
 import express from "express";
 import session from 'express-session';
 import bodyParser from 'body-parser';
@@ -12,11 +13,11 @@ if (!(process.env.SESSION_SECRET && process.env.LLM_API_KEY)) {
 }
 
 const app = express();
+const ai = new GoogleGenAI({ apiKey: process.env.LLM_API_KEY });
 
 // Parse request bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 // Configure sessions
 app.use(session({
@@ -119,7 +120,7 @@ app.get("/api/users/:userId/shopping-list", (req, res) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    
+
 });
 
 // from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html
