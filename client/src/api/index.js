@@ -7,15 +7,31 @@ These functions will be called on the individual pages and handle all the fetchi
 
 import { useState, useEffect } from "react";
 
-import SAMPLE_RECIPES from "../../../sample_data/recipes.json";
-
 export function useRecipes() {
     const [recipes, setRecipes] = useState(null);
+
     useEffect(() => {
-        // TODO: run the actual fetch() call: this is just a placeholder for now
-        setTimeout(() => {
-            setRecipes(SAMPLE_RECIPES);
-        }, 500); // sample 500ms delay to simulate a fetch call
+        let cancelled = false;
+
+        fetch("/api/recipes")
+            .then(async (response) => {
+                if (!response.ok) {
+                    const body = await response.json().catch(() => ({}));
+                    throw new Error(body.error ?? "Unable to load recipes.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (!cancelled) setRecipes(data);
+            })
+            .catch((error) => {
+                console.error(error);
+                if (!cancelled) setRecipes([]);
+            });
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     return recipes;

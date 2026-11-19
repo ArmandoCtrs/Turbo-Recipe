@@ -1,16 +1,17 @@
 import path from "path";
-import { readFileSync } from "fs";
 import express from "express";
 import session from 'express-session';
 import bodyParser from 'body-parser';
-import fs from "fs";//for reading the sample user database
+import dotenv from "dotenv";
+import { MongoClient, ObjectId } from "mongodb";
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") });
 
 const app = express();
 
 // Parse request bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 // Configure sessions
 app.use(session({
@@ -20,29 +21,23 @@ app.use(session({
     cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
 
+const client = new MongoClient(process.env.MONGODB_URI);
+await client.connect();
+
+const database = client.db("db");
+const userCollection = database.collection("users");
+const recipeCollection = database.collection("recipes");
 
 // Login route
-app.post("/login", (req, res) => {
-    const { username, password } = req.body;
-
-    // Sample user database
-    var users = [];
-    try {
-        users = JSON.parse(fs.readFileSync('../sample_data/users.json', 'utf8'));
-    } catch (err) {
-        console.error(err);
-    }
-
-    const user = users.find(
-        u => u.username === username && u.password === password
-    );
+app.post("/login", async (req, res) => {
+    const user = await userCollection.findOne({ username: req.body.username });
 
     if (!user) {
         return res.status(401).json({ message: "Invalid username or password." });
     }
 
     req.session.user = {
-        id: user.id,
+        id: user._id,
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName
@@ -77,8 +72,6 @@ app.post('/logout', (req, res) => {
 
 const isProd = !process.argv.includes("--dev");
 const clientDist = path.resolve(import.meta.dirname, "../../client/dist");
-const recipesPath = path.resolve(import.meta.dirname, "../../sample_data/recipes.json");
-const recipes = JSON.parse(readFileSync(recipesPath, "utf8"));
 
 app.get("/api/ping", (req, res) => {
     res.json({ message: "up", timestamp: Date.now() });
@@ -87,15 +80,78 @@ app.get("/api/ping", (req, res) => {
 // From Albert: Added an endpoint for recipe fetches by ID, 
 // allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
 // After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.
-app.get("/api/recipes/:recipeId", (req, res) => {
-    const recipe = recipes.find((item) => item.id === req.params.recipeId);
+app.get("/api/recipes/:recipeId", async (req, res, next) => {
+    try {
+        if (!ObjectId.isValid(req.params.recipeId)) {
+            return res.status(400).json({ error: "Invalid recipe ID." });
+        }
 
-    // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
-    if (!recipe) {
-        return res.status(404).json({ error: "Recipe not found." });
+        const [recipe] = await recipeCollection.aggregate([
+            { $match: { _id: new ObjectId(req.params.recipeId) } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "authorUser"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    id: { $toString: "$_id" },
+                    name: 1,
+                    author: { $arrayElemAt: ["$authorUser.username", 0] },
+                    tags: 1,
+                    description: 1,
+                    ingredients: 1,
+                    instructions: 1
+                }
+            }
+        ]).toArray();
+
+        if (!recipe) {
+            return res.status(404).json({ error: "Recipe not found." });
+        }
+
+        res.json({ ...recipe, id: String(recipe._id) });
+    } catch (error) {
+        next(error);
     }
+});
 
-    res.json(recipe);
+app.get("/api/recipes", async (req, res, next) => {
+    try {
+        const results = await recipeCollection.aggregate([
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "authorUser"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    id: { $toString: "$_id" },
+                    name: 1,
+                    author: { $arrayElemAt: ["$authorUser.username", 0] },
+                    tags: 1,
+                    description: 1,
+                    ingredients: 1,
+                    instructions: 1
+                }
+            }
+        ]).toArray();
+
+        res.json(results.map((recipe) => ({
+            ...recipe,
+            id: String(recipe._id)
+        })));
+    } catch (error) {
+        next(error);
+    }
 });
 
 // from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html

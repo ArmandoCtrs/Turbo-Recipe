@@ -37,6 +37,15 @@ cd Turbo-Recipe
 npm install
 ```
 
+MongoDB is declared as a root workspace dependency, so the root `npm install` installs it automatically. The server workspace also declares its server dependencies, including `mongodb`, `dotenv`, `express`, `express-session`, and `body-parser`.
+
+A `.env` file will be shared privately, and is to be placed in the repository root and set.
+
+Do not commit `.env`; it should be excluded in `.gitignore`, but in case it's not, add these entries into `.gitignore`.
+
+.env
+.env.*
+
 ### Development mode
 
 To run in development mode, you must run the backend dev server and the frontend dev server
