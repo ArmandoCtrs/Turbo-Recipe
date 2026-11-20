@@ -77,6 +77,61 @@ app.get("/api/ping", (req, res) => {
     res.json({ message: "up", timestamp: Date.now() });
 });
 
+app.post("/api/recipes", async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: "Unauthorized." });
+    }
+
+    const { name, description, ingredients, instructions, tags } = req.body;
+
+    if (
+        typeof name !== "string" ||
+        !name.trim() ||
+        !Array.isArray(ingredients) ||
+        ingredients.length === 0 ||
+        ingredients.some((ingredient) => typeof ingredient !== "string" || !ingredient.trim()) ||
+        typeof instructions !== "string" ||
+        !instructions.trim() ||
+        (tags !== undefined && !Array.isArray(tags))
+    ) {
+        return res.status(400).json({
+            error: "Name, ingredients, and instructions are required."
+        });
+    }
+
+    if (!ObjectId.isValid(req.session.user.id)) {
+        return res.status(401).json({ error: "Invalid authenticated user." });
+    }
+
+    try {
+        const result = await recipeCollection.insertOne({
+            name: name.trim(),
+            ...(typeof description === "string" && description.trim()
+                ? { description: description.trim() }
+                : {}),
+            author: new ObjectId(req.session.user.id),
+            ingredients: ingredients.map((ingredient) => ingredient.trim()),
+            instructions: instructions.trim(),
+            tags: Array.isArray(tags)
+                ? tags
+                    .filter((tag) => typeof tag === "string")
+                    .map((tag) => tag.trim())
+                    .filter(Boolean)
+                : []
+        });
+
+        res.status(201).json({
+            recipe: {
+                id: String(result.insertedId),
+                name: name.trim()
+            }
+        });
+    } catch (error) {
+        console.error("Failed to add recipe:", error);
+        res.status(500).json({ error: "Unable to add recipe." });
+    }
+});
+
 // From Albert: Added an endpoint for recipe fetches by ID, 
 // allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
 // After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.

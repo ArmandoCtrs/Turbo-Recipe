@@ -50,3 +50,22 @@ export async function getRecipe(recipeId) {
 
     return response.json();
 }
+
+export async function createRecipe(recipe) {
+    const response = await fetch("/api/recipes", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(recipe)
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(body.error ?? "Unable to add recipe.");
+    }
+
+    return body.recipe;
+}
