@@ -28,9 +28,66 @@ const database = client.db("db");
 const userCollection = database.collection("users");
 const recipeCollection = database.collection("recipes");
 
+// Registration route used by Register.jsx to create a new user account. All fields are required, and it checks for email and username uniqueness, which is enforced by Atlas as well.
+app.post("/register", async (req, res) => {
+    const { username, email, password, firstName, lastName } = req.body;
+
+    if (
+        typeof username !== "string" || !username.trim() ||
+        typeof email !== "string" || !email.trim() ||
+        typeof password !== "string" || !password ||
+        typeof firstName !== "string" || !firstName.trim() ||
+        typeof lastName !== "string" || !lastName.trim()
+    ) {
+        return res.status(400).json({ error: "All registration fields are required." });
+    }
+
+    try {
+        const normalizedUsername = username.trim();
+        const normalizedEmail = email.trim().toLowerCase();
+
+        const existingUser = await userCollection.findOne({
+            $or: [
+                { username: normalizedUsername },
+                { email: normalizedEmail }
+            ]
+        });
+
+        if (existingUser) {
+            return res.status(409).json({
+                error: "Username or email is already registered."
+            });
+        }
+
+        const result = await userCollection.insertOne({
+            username: normalizedUsername,
+            email: normalizedEmail,
+            password,
+            firstName: firstName.trim(),
+            lastName: lastName.trim()
+        });
+
+        const user = {
+            id: result.insertedId,
+            username: normalizedUsername,
+            firstName: firstName.trim(),
+            lastName: lastName.trim()
+        };
+
+        req.session.user = user;
+        res.status(201).json({ message: "Registration successful.", user });
+    } catch (error) {
+        console.error("Failed to register user:", error);
+        res.status(500).json({ error: "Unable to register." });
+    }
+});
+
 // Login route
 app.post("/login", async (req, res) => {
-    const user = await userCollection.findOne({ username: req.body.username });
+    const user = await userCollection.findOne({
+        username: req.body.username,
+        password: req.body.password
+    });
 
     if (!user) {
         return res.status(401).json({ message: "Invalid username or password." });
@@ -53,7 +110,7 @@ app.post("/login", async (req, res) => {
 app.get('/profile', (req, res) => {
     // Check if user is logged in
     if (!req.session.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: 'Unauthorized. Please ensure you are logged in, or re-login' });
     }
     
     res.json({ message: 'Profile accessed', user: req.session.user });
@@ -79,7 +136,7 @@ app.get("/api/ping", (req, res) => {
 
 app.post("/api/recipes", async (req, res) => {
     if (!req.session.user) {
-        return res.status(401).json({ error: "Unauthorized." });
+        return res.status(401).json({ error: "" });
     }
 
     const { name, description, ingredients, instructions, tags } = req.body;
