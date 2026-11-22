@@ -59,7 +59,11 @@ Combine the same ingredient across recipes into ONE line item.
 - If you are unsure whether two items are the same (e.g. "stock" vs. "broth"),
   keep them separate and add a note.
 - Keep meaningful variety words ("basmati rice", "plain yogurt", "dry red
-  wine", "corn tortilla", "flour tortilla"). Drop only preparation words.
+  wine", "corn tortilla", "flour tortilla", "cremini mushroom"). Drop only
+  preparation words and size words.
+- Drop size words (small, medium, large, extra-large, jumbo) from item names
+  so the same ingredient merges. "4 large eggs" + "a dozen eggs" is ONE item:
+  egg.
 - "item" is lowercase and singular, except foods normally sold in the plural
   (black beans, blueberries, crushed tomatoes, chickpeas, lentils).
 
@@ -77,6 +81,8 @@ Expression rules:
 - Use only numbers, + - * / and parentheses. No words, units, or variables.
 - One operand per merged recipe term (a range counts as one term, see above).
   Write mixed numbers as 3/2 or (1+1/2).
+- Each <q> tag's expression may contain only operands from source strings that
+  have that tag's unit (after same-family conversion).
 - Show conversions as visible fractions, never as pre-computed decimals
   (2 tbsp in cups is 2/16, not 0.125). Use decimals only if the input did.
 - Never mix different units in one expression. Convert first, or use separate
@@ -99,6 +105,9 @@ Attribute rules:
   one: "1 (14 oz) can diced tomatoes" is
   <q expr='1' one='can (14 oz)' many='cans (14 oz)' />. Different sizes are
   different units. Never reduce a package to its contents (not "14 oz").
+- Any parenthetical size stays in the unit, for every container word (can,
+  jar, ball, bag, box, package): "1 ball (500g) pizza dough" is
+  <q expr='1' one='ball (500g)' many='balls (500g)' />.
 - Whole countable items (eggs, onions, lemons, chicken breasts, tortillas,
   noodles): use one='ct' and omit "many". Example: 3 onions is
   <q expr='1+2' one='ct' />.
@@ -109,22 +118,29 @@ Units and conversion:
 - Keep the recipes' own units when they already match. Convert only when needed
   to add. If you must pick a system, use US customary.
 - If all terms are metric, stay metric.
-- Prefer the most natural unit for the total (6 tbsp -> cup).
+- Prefer the most natural unit for the total, but only convert up when the
+  total reaches the larger unit (8 tbsp -> 1/2 cup; 6 tbsp stays 6 tbsp).
 - Reference conversions: 3 tsp = 1 tbsp; 16 tbsp = 1 cup; 2 tbsp = 1 fl oz;
   8 fl oz = 1 cup; 2 cups = 1 pint; 2 pints = 1 quart; 4 quarts = 1 gallon;
-  16 oz = 1 lb; 1000 g = 1 kg; 1000 ml = 1 l; 1 dozen = 12;
-  1 stick butter = 8 tbsp = 1/2 cup.
+  16 oz = 1 lb; 1000 g = 1 kg; 1000 ml = 1 l; 1 dozen = 12.
   Metric <-> US (only when you must combine them): 1 lb = 454 g;
   1 oz = 28.35 g; 1 cup = 237 ml; 1 fl oz = 29.57 ml.
+  Butter sticks: use 1 stick = 8 tbsp = 1/2 cup ONLY when a source string
+  actually says "stick". Never use it to convert grams of butter.
 
 Merge rules for each line item, in this order:
 1. Identical units ALWAYS sum into ONE tag. Two "can (14 oz)" terms become
    <q expr='1+1' one='can (14 oz)' many='cans (14 oz)' />, never two tags.
 2. Units in the same family (all volume, or all weight) are ALWAYS converted
-   and summed into ONE tag. This includes 1 stick butter = 8 tbsp, cups plus
-   tablespoons, and metric <-> US weight (set "approximate": true for
-   metric <-> US).
-3. Join with " + " ONLY across different families (volume vs. weight vs.
+   and summed into ONE tag. This includes cups plus tablespoons, and metric
+   <-> US weight (set "approximate": true for metric <-> US). It includes
+   sticks of butter only when a source string says "stick".
+3. Never convert between weight (g, kg, oz, lb) and volume (tsp, tbsp, cup,
+   fl oz, ml, l). There is no density data. Treat them as different families
+   and join them with " + ". Never set "approximate" for this.
+   Example: "4 tbsp butter" + "50g butter" ->
+     <q expr='4' one='tbsp' /> + <q expr='50' one='g' />
+4. Join with " + " ONLY across different families (volume vs. weight vs.
    count) when there is no sensible equivalent:
      <q expr='2' one='cup' many='cups' /> + <q expr='500' one='g' />
 
@@ -133,20 +149,33 @@ Estimated counts:
   NUMBER OF ITEMS (rounded UP per term), not the original amount.
 - Equivalents: 1 lemon = 3 tbsp juice; 1 lime = 2 tbsp juice;
   1 onion = 1 cup chopped; 1 bell pepper = 1 cup chopped.
-- You MUST convert to the count in these cases and set "approximate": true.
-  Example: "2 tbsp lemon juice" + "juice of 1 lemon" is
-  <q expr='1+1' one='ct' /> with "approximate": true.
+- Convert to a whole-item count, round up per term, set "approximate": true,
+  and add a note, in these cases:
+  - Juice or zest of lemon, lime, or orange, in ANY amount, even as the only
+    term. ("1 tbsp lemon juice" -> item "lemon", <q expr='1' one='ct' />.)
+    "2 tbsp lemon juice" + "juice of 1 lemon" is
+    <q expr='1+1' one='ct' /> with "approximate": true.
+  - A fraction of a whole item. ("1/2 red bell pepper" -> item
+    "red bell pepper", <q expr='1' one='ct' />.)
 
 Approximate flag:
 - Set "approximate": true ONLY if a term was a range, an estimated equivalent,
-  or a metric <-> US conversion. Never set it for a plain join or an ordinary
-  unit conversion.
+  a fraction rounded up to a whole item, or a metric <-> US conversion. Never
+  set it for a plain join, a weight/volume join, or an ordinary unit
+  conversion.
 
 Vague amounts:
 - If ALL terms for an item are vague, quantity is exactly "as needed". Write
   "as needed" ONLY by itself.
 - If some terms are numeric, write the tag(s), then " + more as needed".
   Never write "as needed + more as needed".
+- If a numeric item (e.g. black pepper) is also mentioned in a vague compound
+  string such as "salt and pepper to taste", still list that string only under
+  the first-named item, but append " + more as needed" to the other item's
+  quantity. Do this only when the other item already exists as a line item
+  from a numeric string. Example: "1 tsp black pepper" + "salt and pepper to
+  taste" -> pepper: <q expr='1' one='tsp' /> + more as needed; salt:
+  as needed.
 
 ### 4. Categorize
 Assign each line item exactly one category from this list, using "Other" only
@@ -162,6 +191,11 @@ when nothing fits:
 - Frozen
 - Beverages
 - Other
+
+Category exceptions (always follow these):
+- Cooking spray is ALWAYS Pantry & Dry Goods, never Other.
+- Wine, including dry or cooking wine -> Beverages.
+- Pasta sauce and marinara -> Condiments & Sauces.
 
 ## Output
 
@@ -196,10 +230,10 @@ Return ONLY valid JSON, with no prose and no code fences, in exactly this shape:
 - Do not add items that are not in the input.
 - Do not guess a term for an unparseable string; put it in "unparsed".
 - "notes": include a note ONLY for (a) an estimate you made to turn a
-  non-count amount into a count, or (b) an ambiguous merge you declined to
-  make. Do NOT note ranges, unit conversions, or synonym merges: the
-  "approximate" flag already covers them. One sentence, under 15 words each.
-  Use [] if none.
+  non-count amount into a count, including a fraction rounded up to a whole
+  item, or (b) an ambiguous merge you declined to make. Do NOT note ranges,
+  unit conversions, or synonym merges: the "approximate" flag already covers
+  them. One sentence, under 15 words each. Use [] if none.
 - If you are unsure which category fits, use "Other". Never omit an item
   because its category is unclear.
 
@@ -208,15 +242,25 @@ Before answering, verify:
 - no sum for a range (a range is one operand: its higher number)
 - no repeated identical units in one quantity
 - no joined volume+volume or weight+weight
+- no weight converted to volume or volume converted to weight (butter: "4 tbsp
+  + 50 g" stays as two tags), and "approximate" not set for that
+- every operand in a tag comes from a source string with that tag's unit
 - no "many" on abbreviations; "many" present on every full-word unit
 - no "as needed + more as needed"
+- juice or zest of lemon, lime, or orange is a whole-fruit count; fractions of
+  a whole item are rounded up to 1 ct; each has "approximate": true and a note
+- size words (small, medium, large) dropped from item names, so "egg" and
+  "large egg" are ONE item
+- parenthetical sizes kept in package units ("ball (500g)", "can (14 oz)")
+- cooking spray is not in "Other"; wine is in Beverages; marinara is in
+  Condiments & Sauces
 - every item name lowercase and singular (except foods normally sold in the plural)
 - every input string appears exactly once in sources or unparsed
 - there are {{TOTAL_STRINGS}} ingredient strings in total across all recipes.
 - the "sources" arrays plus "unparsed" contains exactly {{TOTAL_STRINGS}} strings.
 `;
 
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite";
 
 // ---------- input validation (user data, so never trust it) ----------
 const MAX_RECIPES = 30;
