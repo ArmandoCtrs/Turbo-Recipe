@@ -194,3 +194,31 @@ select {
   display: block;
   margin-bottom: 15px
 }
+
+.create-shopping-list-navigate-button {
+    cursor: pointer;
+    padding: 12px 0;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 1.3em;
+    color: var(--text);
+    text-transform: uppercase;
+    background: none;
+    outline: none;
+    border: 2px dashed rgb(136, 133, 158);
+    border-radius: 8px;
+
+    transition: background-color 0.1s ease;
+}
+
+.create-shopping-list-navigate-button:hover {
+    background-color: rgb(236, 235, 239);
+}
+
+.create-shopping-list-button {
+    
+}
+
+.shopping-list-header {
+    font-size: 1.6em !important;
+}

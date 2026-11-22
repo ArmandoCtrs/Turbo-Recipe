@@ -3,10 +3,12 @@ import { useAuth } from "../auth/useAuth";
 import { createShoppingList, getShoppingLists } from "../api";
 import { useEffect, useState } from "react";
 import { ShoppingListCard } from "../components/ShoppingListDisplay";
+import { useNavigate } from "react-router";
 
 export function ShoppingListHome() {
     const [res, setRes] = useState();
     const [shoppingLists, setShoppingLists] = useState([]);
+    const navigate = useNavigate();
     const { user } = useAuth();
 
     useEffect(() => {
@@ -19,11 +21,10 @@ export function ShoppingListHome() {
 
     return (
         <Layout>
-            <button onClick={(async () =>{
-                const response = await createShoppingList(user.id, "Test Shopping List", user.favorites);
-                setShoppingLists(lsts => [...lsts, response]);
-            })}>
-                Create shopping list
+            <button className="create-shopping-list-navigate-button" onClick={() => {
+                navigate("/shopping-list/new");
+            }}>
+                + Create New Shopping List
             </button>
             <h2>My Shopping Lists</h2>
             <div>
