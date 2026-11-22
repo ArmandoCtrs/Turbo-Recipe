@@ -198,7 +198,7 @@ select {
 .create-shopping-list-navigate-button {
     cursor: pointer;
     padding: 12px 0;
-    font-family: inherit;
+    font-family: "Lexend";
     font-weight: bold;
     font-size: 1.3em;
     color: var(--text);
@@ -216,9 +216,25 @@ select {
 }
 
 .create-shopping-list-button {
-    
+    margin-top: 16px;
+    cursor: pointer;
+    padding: 12px 0;
+    font-family: "Lexend";
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--text);
+    text-transform: uppercase;
+    background: rgb(250, 231, 223);
+    outline: none;
+    border: 2px solid rgb(114, 93, 91);
+    border-radius: 8px;
+}
+
+.create-shopping-list-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .shopping-list-header {
-    font-size: 1.6em !important;
+    font-size: 1.45em !important;
 }
