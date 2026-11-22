@@ -39,6 +39,7 @@ app.post("/register", async (req, res) => {
         typeof firstName !== "string" || !firstName.trim() ||
         typeof lastName !== "string" || !lastName.trim()
     ) {
+        // Throw a code 400 if any of the registration fields are empty.
         return res.status(400).json({ error: "All registration fields are required." });
     }
 
@@ -53,6 +54,7 @@ app.post("/register", async (req, res) => {
             ]
         });
 
+        // Throw a code 409 (Conflict) if the username or email is already registered.
         if (existingUser) {
             return res.status(409).json({
                 error: "Username or email is already registered."
