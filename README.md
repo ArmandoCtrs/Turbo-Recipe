@@ -6,7 +6,7 @@ Features:
 
 * Browse existing recipes 
     * Search by name, username, tags 
-    * Favorite and unfavorite recipes from the recipe viewer
+    * Favorite and unfavorite recipes from search results or the recipe viewer; favorites appear first in search results
     * Save recipe to user’s shopping list 
 * Perform CRUD operations on recipes (name, ingredients list, instructions, tags) 
 * Export a shopping list based on their saved recipes.

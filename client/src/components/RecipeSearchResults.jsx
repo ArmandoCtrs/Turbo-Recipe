@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Link } from "react-router";
 
 const MAX_TAGS = 3;
 
 const styles = {
     card: {
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         gap: 10,
@@ -12,16 +12,16 @@ const styles = {
         background: "#fff",
         borderWidth: 1,
         borderStyle: "solid",
-        borderColor: "#c6cbd3",
-        borderRadius: 12,
         borderRadius: 12,
         color: "#1c2026",
         textDecoration: "none",
         transition: "border-color 0.15s ease, box-shadow 0.15s ease",
     },
-    cardHover: {
-        borderColor: "#8d95a3",
-        boxShadow: "0 2px 8px rgb(28 32 38 / 0.06)",
+    cardLink: {
+        position: "absolute",
+        inset: 0,
+        zIndex: 1,
+        borderRadius: 12,
     },
     heading: {
         display: "flex",
@@ -46,6 +46,13 @@ const styles = {
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
+    },
+    authorRow: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 8,
+        minWidth: 0,
     },
     text: {
         margin: 0,
@@ -95,9 +102,7 @@ const styles = {
     },
 };
 
-export function RecipeCard({ recipe, author }) {
-    const [hovered, setHovered] = useState(false);
-
+export function RecipeCard({ recipe, author, favorite, disabled, pending, onToggleFavorite }) {
     const { id, name, tags = [], description, instructions } = recipe;
 
     // `author` is the resolved user object; fall back to the raw id
@@ -107,18 +112,26 @@ export function RecipeCard({ recipe, author }) {
     const hiddenCount = tags.length - visibleTags.length;
 
     return (
-        <Link
-            to={`/recipes/${id}`}
-            style={{
-                ...styles.card,
-                ...(hovered && styles.cardHover),
-            }}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-        >
+        <article className="recipe-card" style={styles.card}>
+            <Link to={`/recipes/${id}`} aria-label={`View ${name}`} style={styles.cardLink} />
             <div style={styles.heading}>
                 <h3 style={styles.name}>{name}</h3>
-                <span style={styles.author}>@{handle}</span>
+                <div style={styles.authorRow}>
+                    <span style={styles.author}>@{handle}</span>
+                    <button
+                        type="button"
+                        className="card-favorite"
+                        aria-label={`${favorite ? "Unfavorite" : "Favorite"} ${name}`}
+                        aria-pressed={favorite}
+                        disabled={disabled}
+                        aria-disabled={disabled || pending}
+                        onClick={(event) => onToggleFavorite(id, event.currentTarget)}
+                    >
+                        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                            <path d="M12 21s-8.5-5.3-8.5-11.1a4.6 4.6 0 0 1 8.5-2.4 4.6 4.6 0 0 1 8.5 2.4C20.5 15.7 12 21 12 21Z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <p style={styles.text}>{description ?? instructions}</p>
@@ -135,11 +148,11 @@ export function RecipeCard({ recipe, author }) {
                     )}
                 </ul>
             )}
-        </Link>
+        </article>
     );
 }
 
-export function RecipeSearchResults({ ready, results }) {
+export function RecipeSearchResults({ ready, results, favorites, pendingIds, onToggleFavorite }) {
     if (!ready) {
         return <p>Loading...</p>;
     } else if (results === null) {
@@ -154,7 +167,15 @@ export function RecipeSearchResults({ ready, results }) {
         return (
             <div style={styles.results}>
                 {results.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} author={recipe.authorUser} />
+                    <RecipeCard
+                        key={recipe.id}
+                        recipe={recipe}
+                        author={recipe.authorUser}
+                        favorite={favorites?.has(recipe.id) ?? false}
+                        disabled={!favorites}
+                        pending={pendingIds.has(recipe.id)}
+                        onToggleFavorite={onToggleFavorite}
+                    />
                 ))}
             </div>
         )

@@ -8,30 +8,53 @@ import { MongoClient, ObjectId } from "mongodb";
 export function favoritesRouter(userCollection, recipeCollection) {
     const router = express.Router();
 
-    router.use("/:recipeId/favorite", (req, res, next) => {
+    router.use(["/favorites", "/:recipeId/favorite"], (req, res, next) => {
         if (!req.session.user || !ObjectId.isValid(req.session.user.id)) {
             return res.status(401).json({ error: "Please log in to manage favorites." });
         }
+        next();
+    });
+
+    router.use("/:recipeId/favorite", (req, res, next) => {
         if (!ObjectId.isValid(req.params.recipeId)) {
             return res.status(400).json({ error: "Invalid recipe ID." });
         }
         next();
     });
 
-    router.get("/:recipeId/favorite", async (req, res) => {
+    async function loadFavorites(userId) {
+        const user = await userCollection.findOne(
+            { _id: new ObjectId(userId) },
+            { projection: { favorites: 1 } }
+        );
+        if (!user) return null;
+        if (user.favorites !== undefined && !Array.isArray(user.favorites)) {
+            throw new Error("User favorites is not an array.");
+        }
+        return user.favorites ?? [];
+    }
+
+    router.get("/favorites", async (req, res) => {
         try {
-            const user = await userCollection.findOne(
-                { _id: new ObjectId(req.session.user.id) },
-                { projection: { favorites: 1 } }
-            );
-            if (!user) {
+            const favorites = await loadFavorites(req.session.user.id);
+            if (favorites === null) {
                 return res.status(404).json({ error: "User not found." });
             }
-            if (user.favorites !== undefined && !Array.isArray(user.favorites)) {
-                throw new Error("User favorites is not an array.");
+            res.json({ favorites: favorites.filter((id) => id instanceof ObjectId).map(String) });
+        } catch (error) {
+            console.error("Failed to load favorites:", error);
+            res.status(500).json({ error: "Unable to load favorites." });
+        }
+    });
+
+    router.get("/:recipeId/favorite", async (req, res) => {
+        try {
+            const favorites = await loadFavorites(req.session.user.id);
+            if (favorites === null) {
+                return res.status(404).json({ error: "User not found." });
             }
             const recipeId = new ObjectId(req.params.recipeId);
-            res.json({ favorite: (user.favorites ?? []).some((id) => id instanceof ObjectId && id.equals(recipeId)) });
+            res.json({ favorite: favorites.some((id) => id instanceof ObjectId && id.equals(recipeId)) });
         } catch (error) {
             console.error("Failed to load favorite:", error);
             res.status(500).json({ error: "Unable to load favorite status." });

@@ -81,6 +81,64 @@ header * {
     background: #F5F3F9;
 }
 
+.recipe-card {
+    border-color: #c6cbd3;
+}
+
+.recipe-card:hover,
+.recipe-card:focus-within {
+    border-color: #8d95a3;
+    box-shadow: 0 2px 8px rgb(28 32 38 / 0.06);
+}
+
+.card-favorite {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 2px;
+    border: 0;
+    background: transparent;
+    color: #5b6370;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.recipe-card:hover .card-favorite,
+.recipe-card:focus-within .card-favorite {
+    opacity: 1;
+}
+
+.card-favorite svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+}
+
+.card-favorite[aria-pressed="true"] {
+    color: #c62828;
+}
+
+.card-favorite[aria-pressed="true"] svg {
+    fill: currentColor;
+}
+
+.card-favorite:disabled {
+    cursor: not-allowed;
+}
+
+.card-favorite[aria-disabled="true"]:not(:disabled) {
+    cursor: wait;
+}
+
+@media (hover: none) {
+    .card-favorite {
+        opacity: 1;
+    }
+}
+
 .favorite-button {
     color: #111;
     background: #c5c5c5;
