@@ -76,9 +76,11 @@ const styles = {
         paddingLeft: 22,
         lineHeight: 1.7,
     },
-    favoriteButton: {
+    favoriteButtonContainer: {
         alignSelf: "flex-start",
         marginTop: 16,
+    },
+    favoriteButton: {
         padding: "8px 14px",
         cursor: "pointer",
     },
@@ -90,7 +92,6 @@ function FavoriteButton({ recipeId }) {
     const [saving, setSaving] = useState(false);
     const [hovered, setHovered] = useState(false);
     const [error, setError] = useState("");
-    const [attempt, setAttempt] = useState(0);
 
     useEffect(() => {
         let cancelled = false;
@@ -108,7 +109,7 @@ function FavoriteButton({ recipeId }) {
                 }
             });
         return () => { cancelled = true; };
-    }, [recipeId, attempt]);
+    }, [recipeId]);
 
     async function handleClick() {
         setSaving(true);
@@ -123,27 +124,27 @@ function FavoriteButton({ recipeId }) {
         }
     }
 
-    function retry() {
-        setError("");
-        setLoading(true);
-        setAttempt((previous) => previous + 1);
-    }
-
     return (
         <>
-            <button
-                type="button"
-                style={styles.favoriteButton}
-                disabled={loading || saving || favorite === null}
-                aria-pressed={favorite === true}
+            <div
+                style={styles.favoriteButtonContainer}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
-                onClick={handleClick}
             >
-                {loading ? "Loading favorite..." : favorite ? (hovered ? "Unfavorite?" : "Favorited!") : "Favorite"}
-            </button>
+                <button
+                    type="button"
+                    className="favorite-button"
+                    style={styles.favoriteButton}
+                    disabled={loading || saving || favorite === null}
+                    aria-pressed={favorite === true}
+                    data-hovered={hovered}
+                    data-saving={saving}
+                    onClick={handleClick}
+                >
+                    {loading ? "Loading favorite..." : favorite ? (hovered || saving ? "Unfavorite?" : "Favorited!") : "Favorite"}
+                </button>
+            </div>
             {error && <p role="alert">{error}</p>}
-            {error && favorite === null && <button type="button" onClick={retry}>Retry favorite status</button>}
         </>
     );
 }

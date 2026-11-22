@@ -81,6 +81,37 @@ header * {
     background: #F5F3F9;
 }
 
+.favorite-button {
+    color: #111;
+    background: #c5c5c5;
+    border: 1px solid #767676;
+}
+
+.favorite-button[aria-pressed="false"][data-hovered="true"]:not(:disabled) {
+    color: #fff;
+    background: #2e7d32;
+    border-color: #2e7d32;
+}
+
+.favorite-button[aria-pressed="true"],
+.favorite-button[aria-pressed="false"]:active:not(:disabled),
+.favorite-button[aria-pressed="false"][data-saving="true"] {
+    color: #fff;
+    background: #1b5e20;
+    border-color: #1b5e20;
+}
+
+.favorite-button[aria-pressed="true"][data-hovered="true"]:not(:disabled) {
+    background: #c62828;
+    border-color: #c62828;
+}
+
+.favorite-button[aria-pressed="true"]:active:not(:disabled),
+.favorite-button[aria-pressed="true"][data-saving="true"] {
+    background: #8e1515;
+    border-color: #8e1515;
+}
+
 @media (max-width: 56rem) {
     #page-container {
         border-inline: 0;

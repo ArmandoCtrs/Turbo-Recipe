@@ -58,6 +58,11 @@ async function favoriteRequest(recipeId, method) {
     });
     const body = await response.json().catch(() => ({}));
     if (!response.ok) {
+
+        // For whatever reason, if the user is not authenticated during a given session, such as if the backend is terminated and restarts, the user will get a 401 response and ask to re-login.
+        if (response.status === 401 && method === "GET") {
+            throw new Error("Expired session, unable to get favorites. Please re-login.");
+        }
         throw new Error(body.error ?? "Unable to manage favorite.");
     }
     return body.favorite;
