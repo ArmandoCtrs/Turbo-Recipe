@@ -1,11 +1,30 @@
 import { Layout } from "../components/Layout";
-import { Link } from "react-router";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import { MiniRecipeCard } from "../components/MiniRecipeCard";
+import { createShoppingList } from "../api";
 import { useAuth } from "../auth/useAuth";
 import { useRecipes } from "../api";
+import { SlidingMessage } from "../components/SlidingMessage";
 
 const styles = {
+    loadingWrap: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 16,
+        minHeight: "70vh",
+        textAlign: "center",
+    },
+    spinner: {
+        width: 40,
+        height: 40,
+        border: "4px solid #e4e7ec",
+        borderTopColor: "#2f6fed",
+        borderRadius: "50%",
+        animation: "spin 0.8s linear infinite",
+    },
     nameField: {
         display: "inline-flex",
         gap: "12px",
@@ -44,6 +63,46 @@ const styles = {
     },
 }
 
+const PROGRESS_MESSAGES = [
+    "Gathering your recipes...",
+    "Opening each recipe card...",
+    "Reading ingredient lists...",
+    "Spotting the duplicates...",
+    "Combining duplicate ingredients...",
+    "Converting measurements...",
+    "Rounding up the fractions...",
+    "Grouping similar items...",
+    "Sorting items by aisle...",
+    "Checking the pantry staples...",
+    "Crossing off the extras...",
+    "Tidying up the quantities...",
+    "Double-checking the math...",
+    "Alphabetizing the produce...",
+    "Adding the finishing touches...",
+    "Almost ready to shop...",
+];
+
+function CreatingShoppingList() {
+    return (
+        <Layout>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <div style={styles.loadingWrap} role="status">
+                <h1 style={{ display: "inline-flex", gap: 24 }}>
+                    <div style={styles.spinner} />
+                    Creating your list!
+                </h1>
+                <p>
+                    You will be redirected automatically when your list is ready. <br/> 
+                    This can take up to 60 seconds, please be patient.
+                    <br/><br/>
+                    <SlidingMessage messages={PROGRESS_MESSAGES} interval={2500} />
+                </p>
+                
+            </div>
+        </Layout>
+    );
+}
+
 function NoFavoritedRecipes() {
     return (
         <Layout>
@@ -64,9 +123,17 @@ function NoFavoritedRecipes() {
 export function CreateShoppingList() {
     const [name, setName] = useState("");
     const [selectedRecipes, setSelectedRecipes] = useState([]);
+    const [creating, setCreating] = useState(false);
 
+    const navigate = useNavigate();
     const auth = useAuth();
     const recipes = useRecipes();
+
+    if (creating) {
+        return (
+            <CreatingShoppingList />
+        )
+    }
 
     if (!recipes) {
         return (
@@ -86,12 +153,35 @@ export function CreateShoppingList() {
         return auth.user.favorites.includes(recipe.id);
     });
 
+    const selectContainerStyles = {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+    };
+
+    if (name.length < 3) { 
+        selectContainerStyles.opacity = 0.2;
+        selectContainerStyles.pointerEvents = "none";
+    }
+
     const toggleRecipeSelection = (recipeId) => {
         setSelectedRecipes((prev) =>
             prev.includes(recipeId)
                 ? prev.filter((item) => item !== recipeId)
                 : [...prev, recipeId]
         );
+    }
+
+    const executeCreation = async () => {
+        setCreating(true);
+        try {
+            const response = await createShoppingList(auth.user.id, name, selectedRecipes);
+            navigate(`/shopping-list/${response.id}`);
+        } catch (err) {
+            console.error(err);
+            setCreating(false);
+            alert("An error occurred while trying to create your shopping list. Please try again.");
+        }
     }
 
     return (
@@ -109,24 +199,27 @@ export function CreateShoppingList() {
                     onChange={e => setName(e.target.value)}
                 />
             </h1>
-            <h1 className="shopping-list-header">2) Select some recipes:</h1>
-            <div style={styles.selectRegion}>
-                <h4>Your Favorited Recipes</h4>
-                <div style={styles.results}>
-                    {favorites.map((recipe) => (
-                        <MiniRecipeCard 
-                            key={recipe.id} 
-                            recipe={recipe} 
-                            author={recipe.authorUser}
-                            selected={selectedRecipes.includes(recipe.id)}
-                            onSelect={toggleRecipeSelection}
-                        />
-                    ))}
+            <div style={selectContainerStyles}>
+                <h1 className="shopping-list-header">2) Select some recipes:</h1>
+                <div style={styles.selectRegion}>
+                    <h4>Your Favorited Recipes</h4>
+                    <div style={styles.results}>
+                        {favorites.map((recipe) => (
+                            <MiniRecipeCard 
+                                key={recipe.id} 
+                                recipe={recipe} 
+                                author={recipe.authorUser}
+                                selected={selectedRecipes.includes(recipe.id)}
+                                onSelect={toggleRecipeSelection}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
             <button 
                 disabled={(selectedRecipes.length == 0) || !name}
                 className="create-shopping-list-button"
+                onClick={executeCreation}
             >
                 Create shopping list
                 { (selectedRecipes.length) ? (
@@ -136,10 +229,3 @@ export function CreateShoppingList() {
         </Layout>
     )
 }
-
-/*
-(async () =>{
-                const response = await createShoppingList(user.id, "Test Shopping List", user.favorites);
-                setShoppingLists(lsts => [...lsts, response]);
-            })
-*/

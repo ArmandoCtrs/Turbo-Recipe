@@ -1,6 +1,6 @@
 import { Layout } from "../components/Layout";
 import { useAuth } from "../auth/useAuth";
-import { createShoppingList, getShoppingLists } from "../api";
+import { getShoppingLists } from "../api";
 import { useEffect, useState } from "react";
 import { ShoppingListCard } from "../components/ShoppingListDisplay";
 import { useNavigate } from "react-router";
@@ -30,7 +30,7 @@ export function ShoppingListHome() {
             <div>
                 { shoppingLists.length ? (
                     shoppingLists.map(lst => (
-                        <ShoppingListCard shoppingList={lst} user={user} />
+                        <ShoppingListCard key={lst.id} shoppingList={lst} user={user} />
                     ))
                 ) : (
                     "No lists found. Create a new one above."

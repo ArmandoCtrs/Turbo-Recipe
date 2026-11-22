@@ -15,7 +15,7 @@ export function ProfileIcon({ size = 40, ...props }) {
 
             <circle cx="20" cy="20" r="20" fill="#E4E2EA" />
 
-            <g clip-path="url(#avatar-clip)" fill="#A9A6BA">
+            <g clipPath="url(#avatar-clip)" fill="#A9A6BA">
                 <circle cx="20" cy="14.5" r="6.5" />
                 <path d="M4 40 V36 C4 28.4 10.8 23.5 20 23.5 S36 28.4 36 36 V40 Z" />
             </g>
