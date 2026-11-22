@@ -1,10 +1,7 @@
-import { buildShoppingList } from "./validate.js";
+import { buildShoppingList, CATEGORIES } from "./validate.js";
 
-const CATEGORIES = [
-    "Produce", "Meat & Seafood", "Dairy & Eggs", "Bakery & Bread",
-    "Pantry & Dry Goods", "Spices & Seasonings", "Condiments & Sauces",
-    "Frozen", "Beverages", "Other",
-];
+// CATEGORIES now lives in validate.js (single source of truth for the validator
+// and the sort order). Keep the category list inside PROMPT below in sync with it.
 
 const PROMPT = `
 You are a meticulous grocery-shopping assistant. I will give you ingredient
@@ -17,10 +14,14 @@ computes the total and chooses the singular or plural unit.
 
 ## Input
 
-A JSON object mapping recipe names to arrays of ingredient strings. Each string
-is free text and may contain a quantity, a unit, an ingredient name, and
-preparation notes (e.g. "1 pound spaghetti", "four basil leaves",
-"2 cloves garlic, minced").
+A JSON object mapping recipe IDs to recipes. Each recipe has a "name" and an
+"ingredients" object that maps a source ID to one free-text ingredient string.
+Each string may contain a quantity, a unit, an ingredient name, and
+preparation notes. Example: "r1:0": "1 pound spaghetti",
+"r1:1": "four basil leaves", "r1:2": "2 cloves garlic, minced".
+
+Refer to ingredient strings ONLY by their source ID (the key, e.g. "r1:0").
+Never output the ingredient text, a recipe name, or a recipe ID.
 
 <recipes>
 {{RECIPES_JSON}}
@@ -66,6 +67,9 @@ Combine the same ingredient across recipes into ONE line item.
   egg.
 - "item" is lowercase and singular, except foods normally sold in the plural
   (black beans, blueberries, crushed tomatoes, chickpeas, lentils).
+  - Drop count and part words from item names: "fresh basil leaves" -> "fresh
+  basil", "garlic cloves" -> "garlic", "thyme sprigs" -> "thyme". Keep
+  fresh/dried/frozen/canned.
 
 ### 3. Write each quantity
 Express each line item's total as one or more <q /> tags. Write every number
@@ -79,10 +83,10 @@ Example: 1/3 cup + 2 tbsp + 1/4 cup of olive oil becomes
 
 Expression rules:
 - Use only numbers, + - * / and parentheses. No words, units, or variables.
-- One operand per merged recipe term (a range counts as one term, see above).
-  Write mixed numbers as 3/2 or (1+1/2).
-- Each <q> tag's expression may contain only operands from source strings that
-  have that tag's unit (after same-family conversion).
+- One operand per numeric source ID (a range counts as one operand, see
+  above). Write mixed numbers as 3/2 or (1+1/2).
+- Each <q> tag's expression may contain only operands from source IDs whose
+  strings have that tag's unit (after same-family conversion).
 - Show conversions as visible fractions, never as pre-computed decimals
   (2 tbsp in cups is 2/16, not 0.125). Use decimals only if the input did.
 - Never mix different units in one expression. Convert first, or use separate
@@ -169,13 +173,12 @@ Vague amounts:
   "as needed" ONLY by itself.
 - If some terms are numeric, write the tag(s), then " + more as needed".
   Never write "as needed + more as needed".
-- If a numeric item (e.g. black pepper) is also mentioned in a vague compound
-  string such as "salt and pepper to taste", still list that string only under
-  the first-named item, but append " + more as needed" to the other item's
-  quantity. Do this only when the other item already exists as a line item
-  from a numeric string. Example: "1 tsp black pepper" + "salt and pepper to
-  taste" -> pepper: <q expr='1' one='tsp' /> + more as needed; salt:
-  as needed.
+- A vague compound string such as "salt and pepper to taste" names two
+  ingredients. List its source ID under BOTH items. If the other item also has
+  numeric sources, append " + more as needed" to its quantity. Example: black
+  pepper has "r1:3" ("1 tsp black pepper") and "r6:7" ("salt and pepper to
+  taste") -> pepper: <q expr='1' one='tsp' /> + more as needed. Salt also
+  lists "r6:7" in its sources.
 
 ### 4. Categorize
 Assign each line item exactly one category from this list, using "Other" only
@@ -199,7 +202,9 @@ Category exceptions (always follow these):
 
 ## Output
 
-Return ONLY valid JSON, with no prose and no code fences, in exactly this shape:
+Return ONLY valid JSON, with no prose and no code fences, in exactly this shape.
+List "sources" BEFORE "quantity": decide which IDs belong to the item first,
+then write the sum.
 
 {
   "categories": [
@@ -207,28 +212,30 @@ Return ONLY valid JSON, with no prose and no code fences, in exactly this shape:
       "name": "Produce",
       "items": [
         {
-          "item": "garlic",
-          "quantity": "<q expr='4+2+3' one='clove' many='cloves' />",
-          "approximate": true,
-          "recipes": ["Spaghetti Aglio e Olio", "Chicken Soup", "Pesto"],
-          "sources": ["4 cloves garlic, thinly sliced", "2 cloves garlic", "2-3 cloves garlic"]
+          "item": "shallot",
+          "sources": ["r1:0", "r2:3", "r3:1"],
+          "quantity": "<q expr='2+1+3' one='ct' />",
+          "approximate": false
         }
       ]
     }
   ],
-  "unparsed": ["Any string you could not interpret, copied verbatim."],
+  "unparsed": ["r4:2"],
   "notes": []
 }
 
 ## Rules
-- There are {{TOTAL_STRINGS}} ingredient strings in total across all recipes.
-  The "sources" arrays plus "unparsed" must contain exactly {{TOTAL_STRINGS}}
-  strings.
-- Every input string must appear exactly once: either in one item's "sources"
-  or in "unparsed". Copy each string verbatim. Do not drop or duplicate any.
-- "recipes" lists the distinct recipe names that contributed to the item.
+- There are {{TOTAL_STRINGS}} source IDs in total. Every ID must appear in at
+  least one item's "sources" or in "unparsed". Use each ID exactly as given.
+  Never invent, alter, or drop an ID.
+- Each ID appears exactly once, with one exception: a compound string naming
+  two or more ingredients (e.g. "salt and pepper to taste") is listed under
+  every item it names.
+- "unparsed" holds source IDs, not ingredient text.
+- Do not output recipe names or recipe IDs. The server looks them up from the
+  source IDs.
 - Do not add items that are not in the input.
-- Do not guess a term for an unparseable string; put it in "unparsed".
+- Do not guess a term for an unparseable string; put its ID in "unparsed".
 - "notes": include a note ONLY for (a) an estimate you made to turn a
   non-count amount into a count, including a fraction rounded up to a whole
   item, or (b) an ambiguous merge you declined to make. Do NOT note ranges,
@@ -244,7 +251,7 @@ Before answering, verify:
 - no joined volume+volume or weight+weight
 - no weight converted to volume or volume converted to weight (butter: "4 tbsp
   + 50 g" stays as two tags), and "approximate" not set for that
-- every operand in a tag comes from a source string with that tag's unit
+- every operand in a tag comes from a source ID whose string has that tag's unit
 - no "many" on abbreviations; "many" present on every full-word unit
 - no "as needed + more as needed"
 - juice or zest of lemon, lime, or orange is a whole-fruit count; fractions of
@@ -255,9 +262,10 @@ Before answering, verify:
 - cooking spray is not in "Other"; wine is in Beverages; marinara is in
   Condiments & Sauces
 - every item name lowercase and singular (except foods normally sold in the plural)
-- every input string appears exactly once in sources or unparsed
-- there are {{TOTAL_STRINGS}} ingredient strings in total across all recipes.
-- the "sources" arrays plus "unparsed" contains exactly {{TOTAL_STRINGS}} strings.
+- every source ID appears in an item's "sources" or in "unparsed"
+- no ID is invented or altered
+- an ID appears in two items only if it is a compound string
+- there are {{TOTAL_STRINGS}} source IDs in total
 `;
 
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite";
@@ -282,46 +290,65 @@ export function resolveRecipes(ids, allRecipes) {
   return unique.map((id) => byId.get(id));
 }
 
-export function buildRecipesPayload(recipeList) {
-  const idByKey = new Map();
-  const entries = recipeList.map((recipe) => {
-    const key = idByKey.has(recipe.name) ? `${recipe.name} (${recipe.id})` : recipe.name;
-    idByKey.set(key, recipe.id);
-    return [key, recipe.ingredients];
-  });
-  return { payload: Object.fromEntries(entries), idByKey };
-}
-
-export function validateRecipesInput(recipes) {
-  if (!recipes || typeof recipes !== "object" || Array.isArray(recipes)) {
-    return "recipes must be an object mapping recipe names to arrays of strings";
-  }
-  const entries = Object.entries(recipes);
-  if (entries.length === 0) return "recipes is empty";
-  if (entries.length > MAX_RECIPES) return `too many recipes (max ${MAX_RECIPES})`;
+/** Returns an error message, or null if the recipe list is acceptable. */
+export function validateRecipeList(recipeList) {
+  if (!Array.isArray(recipeList) || recipeList.length === 0) return "recipes is empty";
+  if (recipeList.length > MAX_RECIPES) return `too many recipes (max ${MAX_RECIPES})`;
 
   let total = 0;
-  for (const [name, list] of entries) {
-    if (!Array.isArray(list)) return `"${name}" must be an array of strings`;
-    for (const s of list) {
-      if (typeof s !== "string" || !s.trim()) return `"${name}" contains an empty or non-string ingredient`;
-      if (s.length > MAX_STRING_LENGTH) return `an ingredient in "${name}" is too long`;
+  for (const r of recipeList) {
+    if (!r || typeof r.id !== "string" || typeof r.name !== "string" || !Array.isArray(r.ingredients)) {
+      return "each recipe needs a string id, a string name, and an ingredients array";
     }
-    total += list.length;
+    if (r.id.includes(":")) return `recipe id "${r.id}" must not contain ":"`;
+    for (const s of r.ingredients) {
+      if (typeof s !== "string" || !s.trim()) return `"${r.name}" contains an empty or non-string ingredient`;
+      if (s.length > MAX_STRING_LENGTH) return `an ingredient in "${r.name}" is too long`;
+    }
+    total += r.ingredients.length;
   }
   if (total === 0) return "no ingredients provided";
   if (total > MAX_STRINGS) return `too many ingredients (max ${MAX_STRINGS})`;
   return null;
 }
 
+// ---------- source IDs ----------
+/**
+ * Gives every ingredient string a stable ID ("<recipeId>:<index>") and builds
+ * the model input plus the lookup table the server uses to resolve IDs later.
+ *
+ * input:  { r1: { name, ingredients: { "r1:0": "400g spaghetti", ... } }, ... }
+ * lookup: Map("r1:0" -> { id, recipeId, recipeName, field, index, text })
+ */
+export function buildInput(recipeList) {
+  const input = {};
+  const lookup = new Map();
+  for (const recipe of recipeList) {
+    const ingredients = {};
+    recipe.ingredients.forEach((text, index) => {
+      const id = `${recipe.id}:${index}`;
+      ingredients[id] = text;
+      lookup.set(id, {
+        id,
+        recipeId: recipe.id,
+        recipeName: recipe.name,
+        field: "ingredients",
+        index,
+        text,
+      });
+    });
+    input[recipe.id] = { name: recipe.name, ingredients };
+  }
+  return { input, lookup };
+}
+
 // ---------- prompt ----------
-export function buildPrompt(recipes) {
-  const total = Object.values(recipes).flat().length;
-  const json = JSON.stringify(recipes, null, 2);
+export function buildPrompt({ input, lookup }) {
+  const json = JSON.stringify(input, null, 2);
   return PROMPT
     // Function replacer: ingredient text containing "$&" or "$1" must not be treated as a pattern
     .replace("{{RECIPES_JSON}}", () => json)
-    .replaceAll("{{TOTAL_STRINGS}}", String(total));
+    .replaceAll("{{TOTAL_STRINGS}}", String(lookup.size));
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -341,15 +368,16 @@ async function generateWithBackoff(ai, params, attempts = 3) {
 }
 
 /**
- * Returns a callModel(recipes, feedback) function for buildShoppingList.
+ * Returns a callModel(ctx, feedback) function for buildShoppingList.
+ * ctx is { input, lookup } from buildInput.
  * IMPORTANT: create a NEW one per request. It holds that request's conversation history.
  */
 export function makeCallModel(ai) {
   let history = [];
 
-  return async (recipes, feedback) => {
+  return async (ctx, feedback) => {
     if (feedback === null) {
-      history = [{ role: "user", parts: [{ text: buildPrompt(recipes) }] }];
+      history = [{ role: "user", parts: [{ text: buildPrompt(ctx) }] }];
     } else {
       history.push({
         role: "user",
@@ -373,7 +401,7 @@ export function makeCallModel(ai) {
   };
 }
 
-// ---------- server-side ordering (the prompt no longer asks the model to sort) ----------
+// ---------- server-side ordering (the prompt does not ask the model to sort) ----------
 export function sortRendered(rendered) {
   // Merge duplicate category entries, in case the model emitted "Produce" twice
   const byName = new Map();
@@ -398,22 +426,13 @@ export function sortRendered(rendered) {
 
 // ---------- top-level ----------
 export async function createShoppingList(recipeList, ai) {
-  if (
-    !Array.isArray(recipeList) ||
-    recipeList.some((r) => !r || typeof r.name !== "string" || !Array.isArray(r.ingredients))
-  ) {
-    throw new Error("recipes must be an array of recipe objects with a name and ingredients");
-  }
-
-  // Do the mapping here: recipe objects -> { "Recipe name": [ingredients] }
-  const { payload, idByKey } = buildRecipesPayload(recipeList);
-
-  const problem = validateRecipesInput(payload);
+  const problem = validateRecipeList(recipeList);
   if (problem) throw new Error(problem);
 
-  // Pass the payload map (not the recipe objects). The validator's coverage
-  // check compares the model's sources against these exact strings.
-  const result = await buildShoppingList(payload, makeCallModel(ai));
+  // Recipe objects -> { input for the model, lookup for the server }
+  const ctx = buildInput(recipeList);
+
+  const result = await buildShoppingList(ctx, makeCallModel(ai));
 
   // One structured log line per request: this is how you learn what to tighten next.
   console.log(JSON.stringify({
@@ -428,19 +447,17 @@ export async function createShoppingList(recipeList, ai) {
     ok: result.ok,
     categories: sortRendered(result.rendered ?? []).map((c) => ({
       name: c.name,
-      items: c.lines.map((l) => {
-        const names = l.recipes ?? [];
-
-        return {
-          item: l.item,
-          quantity: l.quantity,
-          recipes: names,
-          sources: l.sources,
-        };
-      }),
+      items: c.lines.map((l) => ({
+        item: l.item,
+        quantity: l.quantity,
+        recipeIds: l.recipeIds,   // derived by the server from the source IDs
+        recipes: l.recipes,       // recipe names, same order as recipeIds
+        // [{ id, recipeId, recipeName, field, index, text }]
+        sources: l.sources,
+      })),
     })),
-    // Strings the model could not interpret, plus any it dropped after all retries.
-    // Show both to the user verbatim so nothing disappears.
+    // Same source objects as above, for strings the model could not interpret and
+    // for any it dropped after all retries. Show both to the user so nothing disappears.
     unparsed: result.unparsed ?? [],
     unsorted: result.unsorted ?? [],
     notes: result.notes ?? [],
