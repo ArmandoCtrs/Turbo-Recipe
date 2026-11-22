@@ -51,6 +51,26 @@ export async function getRecipe(recipeId) {
     return response.json();
 }
 
+async function favoriteRequest(recipeId, method) {
+    const response = await fetch(`/api/recipes/${encodeURIComponent(recipeId)}/favorite`, {
+        method,
+        credentials: "include",
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(body.error ?? "Unable to manage favorite.");
+    }
+    return body.favorite;
+}
+
+export function getFavorite(recipeId) {
+    return favoriteRequest(recipeId, "GET");
+}
+
+export function setFavorite(recipeId, favorite) {
+    return favoriteRequest(recipeId, favorite ? "PUT" : "DELETE");
+}
+
 export async function createRecipe(recipe) {
     const response = await fetch("/api/recipes", {
         method: "POST",

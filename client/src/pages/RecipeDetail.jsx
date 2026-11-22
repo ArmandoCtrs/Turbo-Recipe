@@ -4,7 +4,8 @@
 
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import { getRecipe } from "../api";
+import { getFavorite, getRecipe, setFavorite } from "../api";
+import { useAuth } from "../auth/useAuth";
 
 import { Layout } from "../components/Layout";
 
@@ -75,13 +76,84 @@ const styles = {
         paddingLeft: 22,
         lineHeight: 1.7,
     },
+    favoriteButton: {
+        alignSelf: "flex-start",
+        marginTop: 16,
+        padding: "8px 14px",
+        cursor: "pointer",
+    },
 };
+
+function FavoriteButton({ recipeId }) {
+    const [favorite, setFavoriteState] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [hovered, setHovered] = useState(false);
+    const [error, setError] = useState("");
+    const [attempt, setAttempt] = useState(0);
+
+    useEffect(() => {
+        let cancelled = false;
+        getFavorite(recipeId)
+            .then((value) => {
+                if (!cancelled) {
+                    setFavoriteState(value);
+                    setLoading(false);
+                }
+            })
+            .catch((requestError) => {
+                if (!cancelled) {
+                    setError(requestError.message);
+                    setLoading(false);
+                }
+            });
+        return () => { cancelled = true; };
+    }, [recipeId, attempt]);
+
+    async function handleClick() {
+        setSaving(true);
+        setHovered(false);
+        setError("");
+        try {
+            setFavoriteState(await setFavorite(recipeId, !favorite));
+        } catch (requestError) {
+            setError(requestError.message);
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    function retry() {
+        setError("");
+        setLoading(true);
+        setAttempt((previous) => previous + 1);
+    }
+
+    return (
+        <>
+            <button
+                type="button"
+                style={styles.favoriteButton}
+                disabled={loading || saving || favorite === null}
+                aria-pressed={favorite === true}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                onClick={handleClick}
+            >
+                {loading ? "Loading favorite..." : favorite ? (hovered ? "Unfavorite?" : "Favorited!") : "Favorite"}
+            </button>
+            {error && <p role="alert">{error}</p>}
+            {error && favorite === null && <button type="button" onClick={retry}>Retry favorite status</button>}
+        </>
+    );
+}
 
 // RecipeDetail component that displays the details of the fetched recipe. This relies on the getRecipe() function from the API
 // module, but of course, this can be changed in the future. This also doesn't yet support showing prep time, cook time, or difficulty,
 // which'll be added in the future and handled by an LLM API call.
 export function RecipeDetail() {
     const { recipeId } = useParams();
+    const { user } = useAuth();
     const [recipeLoad, setRecipeLoad] = useState(null);
 
     useEffect(() => {
@@ -146,6 +218,7 @@ export function RecipeDetail() {
                             <li key={tag} style={styles.tag}>{tag}</li>
                         ))}
                     </ul>
+                    <FavoriteButton key={`${user.id}:${recipeId}`} recipeId={recipeId} />
                 </header>
 
                 {recipe.description && <p>{recipe.description}</p>}
