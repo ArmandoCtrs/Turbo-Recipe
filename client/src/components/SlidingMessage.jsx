@@ -5,6 +5,7 @@ const SLIDE_MS = 500;
 
 const styles = {
     viewport: {
+        display: "inline-block",
         position: "relative",
         width: "100%",
         height: LINE_HEIGHT,
@@ -40,7 +41,7 @@ export function SlidingMessage({ messages = PROGRESS_MESSAGES, interval = 1400 }
     const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     return (
-        <div style={styles.viewport}>
+        <span style={styles.viewport}>
             {messages.map((text, i) => {
                 const n = messages.length;
                 const offset = (i - step + n) % n; // 0 = current, 1 = next, n-1 = previous
@@ -64,6 +65,6 @@ export function SlidingMessage({ messages = PROGRESS_MESSAGES, interval = 1400 }
                     </span>
                 );
             })}
-        </div>
+        </span>
     );
 }

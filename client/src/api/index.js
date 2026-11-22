@@ -39,7 +39,7 @@ export async function getRecipe(recipeId) {
     return handleResponse(response, "Unable to load recipe.");
 }
 
-const listsUrl = (userId) => `/api/users/${encodeURIComponent(userId)}/shopping-list`;
+const listsUrl = (userId) => `/api/users/${encodeURIComponent(userId)}/shopping-lists`;
 
 
 // Create a new shopping list from an array of recipe IDs

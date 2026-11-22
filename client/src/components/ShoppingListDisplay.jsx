@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 
-const MAX_CATEGORIES = 3;
+const MAX_CATEGORIES = 2;
 const MAX_ITEMS_PER_CATEGORY = 3;
 
 const styles = {

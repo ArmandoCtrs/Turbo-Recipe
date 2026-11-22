@@ -14,7 +14,6 @@ export function ShoppingListHome() {
     useEffect(() => {
         (async () => {
             const lsts = await getShoppingLists(user.id);
-            console.log(lsts);
             setShoppingLists(lsts);
         })();
     }, []);
@@ -22,7 +21,7 @@ export function ShoppingListHome() {
     return (
         <Layout>
             <button className="create-shopping-list-navigate-button" onClick={() => {
-                navigate("/shopping-list/new");
+                navigate("/shopping-lists/new");
             }}>
                 + Create New Shopping List
             </button>

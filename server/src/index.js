@@ -118,7 +118,7 @@ app.get("/api/recipes/:recipeId", (req, res) => {
 
 
 // Create a new shopping list
-app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
+app.post("/api/users/:userId/shopping-lists/new", async (req, res) => {
     if (!req.session.user || req.session.user.id !== req.params.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -159,7 +159,7 @@ app.post("/api/users/:userId/shopping-list/new", async (req, res) => {
 });
 
 // Delete a shopping list
-app.delete("/api/users/:userId/shopping-list/:listId", (req, res) => {
+app.delete("/api/users/:userId/shopping-lists/:listId", (req, res) => {
     if (!req.session.user || req.session.user.id !== req.params.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -178,7 +178,7 @@ app.delete("/api/users/:userId/shopping-list/:listId", (req, res) => {
 });
 
 // Get all user's shopping lists
-app.get("/api/users/:userId/shopping-list", (req, res) => {
+app.get("/api/users/:userId/shopping-lists", (req, res) => {
     if (!req.session.user || req.session.user.id !== req.params.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -189,7 +189,7 @@ app.get("/api/users/:userId/shopping-list", (req, res) => {
 });
 
 // Get just one shopping list
-app.get("/api/users/:userId/shopping-list/:listId", (req, res) => {
+app.get("/api/users/:userId/shopping-lists/:listId", (req, res) => {
     if (!req.session.user || req.session.user.id !== req.params.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
     }

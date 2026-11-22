@@ -64,22 +64,20 @@ const styles = {
 }
 
 const PROGRESS_MESSAGES = [
-    "Gathering your recipes...",
-    "Opening each recipe card...",
-    "Reading ingredient lists...",
-    "Spotting the duplicates...",
-    "Combining duplicate ingredients...",
-    "Converting measurements...",
-    "Rounding up the fractions...",
-    "Grouping similar items...",
-    "Sorting items by aisle...",
-    "Checking the pantry staples...",
-    "Crossing off the extras...",
-    "Tidying up the quantities...",
-    "Double-checking the math...",
-    "Alphabetizing the produce...",
-    "Adding the finishing touches...",
-    "Almost ready to shop...",
+    "Looking over your recipes...",
+    "Gathering all the ingredients...",
+    "Reading through each list...",
+    "Figuring out what you need...",
+    "Combining what overlaps...",
+    "Adding up the amounts...",
+    "Making everything line up...",
+    "Sorting things into groups...",
+    "Organizing by section of the store...",
+    "Putting things in a sensible order...",
+    "Double-checking your list...",
+    "Making sure nothing got missed...",
+    "Tidying up the details...",
+    "Getting your list ready...",
 ];
 
 function CreatingShoppingList() {
@@ -114,7 +112,7 @@ function NoFavoritedRecipes() {
             <p>
                 <Link to="/">Browse recipes to find favorites!</Link>
                 <br />
-                <Link to="/shopping-list">Return to all to shopping lists</Link> 
+                <Link to="/shopping-lists">Return to all to shopping lists</Link> 
             </p>
         </Layout>
     );
@@ -176,7 +174,7 @@ export function CreateShoppingList() {
         setCreating(true);
         try {
             const response = await createShoppingList(auth.user.id, name, selectedRecipes);
-            navigate(`/shopping-list/${response.id}`);
+            navigate(`/shopping-lists/${response.id}`);
         } catch (err) {
             console.error(err);
             setCreating(false);
@@ -187,7 +185,7 @@ export function CreateShoppingList() {
     return (
         <Layout>
             <p>
-               <Link to="/shopping-list">&larr; Back to shopping lists</Link> 
+               <Link to="/shopping-lists">&larr; Back to shopping lists</Link> 
             </p>
             <h1 className="shopping-list-header" style={styles.nameField}>
                 <span>1) Give your list a name:</span>

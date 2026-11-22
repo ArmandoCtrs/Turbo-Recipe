@@ -43,9 +43,9 @@ export function AppRoutes() {
                 <Route path="/recipes/new" element={<AddRecipe />} />
                 <Route path="/recipes/:recipeId" element={<RecipeDetail />} />
                 <Route path="/recipes/:recipeId/edit" element={<AddRecipe />} />
-                <Route path="/shopping-list" element={<ShoppingListHome />} />
-                <Route path="/shopping-list/new" element={<CreateShoppingList />} />
-                <Route path="/shopping-list/:shoppingListId" element={<ShoppingListDetail />} />
+                <Route path="/shopping-lists" element={<ShoppingListHome />} />
+                <Route path="/shopping-lists/new" element={<CreateShoppingList />} />
+                <Route path="/shopping-lists/:shoppingListId" element={<ShoppingListDetail />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
