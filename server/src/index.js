@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import { MongoClient, ObjectId } from "mongodb";
 
-export function favoritesRouter(userCollection, recipeCollection) {
+export function favoritesRouter(userCollection, recipeCollection, client) {
     const router = express.Router();
 
     router.use(["/favorites", "/:recipeId/favorite"], (req, res, next) => {
@@ -64,15 +64,31 @@ export function favoritesRouter(userCollection, recipeCollection) {
     router.put("/:recipeId/favorite", async (req, res) => {
         try {
             const recipeId = new ObjectId(req.params.recipeId);
-            const recipe = await recipeCollection.findOne({ _id: recipeId }, { projection: { _id: 1 } });
-            if (!recipe) {
+            const session = client.startSession();
+            let outcome;
+            try {
+                outcome = await session.withTransaction(async () => {
+                    // This write serializes favoriting with deletion of the same recipe.
+                    const recipe = await recipeCollection.updateOne(
+                        { _id: recipeId },
+                        { $inc: { favoriteRevision: 1 } },
+                        { session }
+                    );
+                    if (!recipe.matchedCount) return "recipe-not-found";
+                    const user = await userCollection.updateOne(
+                        { _id: new ObjectId(req.session.user.id) },
+                        { $addToSet: { favorites: recipeId } },
+                        { session }
+                    );
+                    return user.matchedCount ? "ok" : "user-not-found";
+                });
+            } finally {
+                await session.endSession();
+            }
+            if (outcome === "recipe-not-found") {
                 return res.status(404).json({ error: "Recipe not found." });
             }
-            const result = await userCollection.updateOne(
-                { _id: new ObjectId(req.session.user.id) },
-                { $addToSet: { favorites: recipeId } }
-            );
-            if (!result.matchedCount) {
+            if (outcome === "user-not-found") {
                 return res.status(404).json({ error: "User not found." });
             }
             res.json({ favorite: true });
@@ -95,6 +111,95 @@ export function favoritesRouter(userCollection, recipeCollection) {
         } catch (error) {
             console.error("Failed to unfavorite recipe:", error);
             res.status(500).json({ error: "Unable to unfavorite recipe." });
+        }
+    });
+
+    return router;
+}
+
+function recipeFields(body) {
+    if (!body || typeof body !== "object") return null;
+    const { name, description, ingredients, instructions, tags } = body;
+    if (
+        typeof name !== "string" || !name.trim() ||
+        (description !== undefined && typeof description !== "string") ||
+        !Array.isArray(ingredients) || ingredients.length === 0 ||
+        ingredients.some((ingredient) => typeof ingredient !== "string" || !ingredient.trim()) ||
+        typeof instructions !== "string" || !instructions.trim() ||
+        (tags !== undefined && (!Array.isArray(tags) || tags.some((tag) => typeof tag !== "string")))
+    ) return null;
+
+    return {
+        name: name.trim(),
+        description: description?.trim() || "",
+        ingredients: ingredients.map((ingredient) => ingredient.trim()),
+        instructions: instructions.trim(),
+        tags: (tags ?? []).map((tag) => tag.trim()).filter(Boolean)
+    };
+}
+
+export function recipeEditRouter(userCollection, recipeCollection, client) {
+    const router = express.Router();
+
+    function requireRecipeAuthorSession(req, res, next) {
+        if (!req.session.user || !ObjectId.isValid(req.session.user.id)) {
+            return res.status(401).json({ error: "Please log in to modify recipes." });
+        }
+        if (!ObjectId.isValid(req.params.recipeId)) {
+            return res.status(400).json({ error: "Invalid recipe ID." });
+        }
+        next();
+    }
+
+    router.put("/:recipeId", requireRecipeAuthorSession, async (req, res) => {
+        const fields = recipeFields(req.body);
+        if (!fields) return res.status(400).json({ error: "Please provide valid recipe fields." });
+
+        const { description, ...requiredFields } = fields;
+        const update = description
+            ? { $set: { ...requiredFields, description } }
+            : { $set: requiredFields, $unset: { description: "" } };
+        try {
+            const result = await recipeCollection.updateOne({
+                _id: new ObjectId(req.params.recipeId),
+                author: new ObjectId(req.session.user.id)
+            }, update);
+            if (!result.matchedCount) {
+                return res.status(404).json({ error: "Recipe not found or you are not its author." });
+            }
+            res.json({ id: req.params.recipeId });
+        } catch (error) {
+            console.error("Failed to update recipe:", error);
+            res.status(500).json({ error: "Unable to update recipe." });
+        }
+    });
+
+    router.delete("/:recipeId", requireRecipeAuthorSession, async (req, res) => {
+        const recipeId = new ObjectId(req.params.recipeId);
+        const session = client.startSession();
+        try {
+            const deleted = await session.withTransaction(async () => {
+                const result = await recipeCollection.deleteOne({
+                    _id: recipeId,
+                    author: new ObjectId(req.session.user.id)
+                }, { session });
+                if (!result.deletedCount) return false;
+                await userCollection.updateMany(
+                    { favorites: recipeId },
+                    { $pull: { favorites: recipeId } },
+                    { session }
+                );
+                return true;
+            });
+            if (!deleted) {
+                return res.status(404).json({ error: "Recipe not found or you are not its author." });
+            }
+            res.json({ message: "Recipe deleted." });
+        } catch (error) {
+            console.error("Failed to delete recipe:", error);
+            res.status(500).json({ error: "Unable to delete recipe." });
+        } finally {
+            await session.endSession();
         }
     });
 
@@ -234,7 +339,8 @@ async function startServer() {
         res.json({ message: "up", timestamp: Date.now() });
     });
 
-    app.use("/api/recipes", favoritesRouter(userCollection, recipeCollection));
+    app.use("/api/recipes", favoritesRouter(userCollection, recipeCollection, client));
+    app.use("/api/recipes", recipeEditRouter(userCollection, recipeCollection, client));
 
     app.post("/api/recipes", async (req, res) => {
         if (!req.session.user) {
@@ -316,6 +422,7 @@ async function startServer() {
                         id: { $toString: "$_id" },
                         name: 1,
                         author: { $arrayElemAt: ["$authorUser.username", 0] },
+                        authorId: { $toString: "$author" },
                         tags: 1,
                         description: 1,
                         ingredients: 1,

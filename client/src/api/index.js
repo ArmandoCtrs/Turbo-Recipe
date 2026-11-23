@@ -107,3 +107,25 @@ export async function createRecipe(recipe) {
 
     return body.recipe;
 }
+
+async function changeRecipe(recipeId, method, recipe) {
+    const response = await fetch(`/api/recipes/${encodeURIComponent(recipeId)}`, {
+        method,
+        credentials: "include",
+        ...(recipe && {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(recipe)
+        })
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(body.error ?? "Unable to modify recipe.");
+    return body;
+}
+
+export function updateRecipe(recipeId, recipe) {
+    return changeRecipe(recipeId, "PUT", recipe);
+}
+
+export function deleteRecipe(recipeId) {
+    return changeRecipe(recipeId, "DELETE");
+}

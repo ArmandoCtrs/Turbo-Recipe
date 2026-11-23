@@ -46,6 +46,16 @@ Do not commit `.env`; it should be excluded in `.gitignore`, but in case it's no
 .env
 .env.*
 
+### Modifying recipes
+
+The recipe author can modify or delete their recipe from its detail page. Saving
+changes updates the existing MongoDB document and preserves its ID and favorites.
+Deleting permanently removes the recipe and its ID from users' favorites in a
+MongoDB transaction; the database deployment must support transactions (as Atlas
+replica sets do). Favoriting also uses a transaction and increments the internal
+`favoriteRevision` field on the recipe to coordinate with deletion. Users must
+log in again if their server session expires.
+
 ### Development mode
 
 To run in development mode, you must run the backend dev server and the frontend dev server

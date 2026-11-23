@@ -80,9 +80,11 @@ const styles = {
         alignSelf: "flex-start",
         marginTop: 16,
     },
-    favoriteButton: {
-        padding: "8px 14px",
-        cursor: "pointer",
+    actions: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        gap: 16,
     },
 };
 
@@ -133,8 +135,7 @@ function FavoriteButton({ recipeId }) {
             >
                 <button
                     type="button"
-                    className="favorite-button"
-                    style={styles.favoriteButton}
+                    className="action-button favorite-button"
                     disabled={loading || saving || favorite === null}
                     aria-pressed={favorite === true}
                     data-hovered={hovered}
@@ -219,7 +220,12 @@ export function RecipeDetail() {
                             <li key={tag} style={styles.tag}>{tag}</li>
                         ))}
                     </ul>
-                    <FavoriteButton key={`${user.id}:${recipeId}`} recipeId={recipeId} />
+                    <div style={styles.actions}>
+                        <FavoriteButton key={`${user.id}:${recipeId}`} recipeId={recipeId} />
+                        {recipe.authorId === user.id && (
+                            <Link className="action-button" to={`/recipes/${recipeId}/edit`}>Modify recipe</Link>
+                        )}
+                    </div>
                 </header>
 
                 {recipe.description && <p>{recipe.description}</p>}

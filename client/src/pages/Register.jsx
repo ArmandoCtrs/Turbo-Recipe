@@ -78,7 +78,7 @@ export function Register() {
                     <label htmlFor="password-repeat">Repeat Password</label>
                     <input type="password" placeholder="Repeat Password" name="password-repeat" required/>
                     
-                    <button type="submit">Sign Up</button>
+                    <button className="action-button" type="submit">Sign Up</button>
                     
                     <label>
                     <input

@@ -139,10 +139,22 @@ header * {
     }
 }
 
-.favorite-button {
+.action-button,
+#content a.action-button {
+    display: inline-block;
+    padding: 8px 14px;
     color: #111;
-    background: #c5c5c5;
+    background: #e4e4e4;
     border: 1px solid #767676;
+    border-radius: 0;
+    font: 13.3333px Arial, sans-serif;
+    line-height: normal;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.action-button:disabled {
+    cursor: not-allowed;
 }
 
 .favorite-button[aria-pressed="false"][data-hovered="true"]:not(:disabled) {

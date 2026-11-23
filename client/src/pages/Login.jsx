@@ -68,8 +68,8 @@ export function Login() {
                 </label>
 
                 <label>
-                    <button type="submit">Login</button>
-                    <button type="reset">Cancel</button>
+                    <button className="action-button" type="submit">Login</button>
+                    <button className="action-button" type="reset">Cancel</button>
                 </label>
                 
                 {loginError && (
