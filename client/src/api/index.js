@@ -7,15 +7,31 @@ These functions will be called on the individual pages and handle all the fetchi
 
 import { useState, useEffect } from "react";
 
-import SAMPLE_RECIPES from "../../../sample_data/recipes.json";
-
 export function useRecipes() {
     const [recipes, setRecipes] = useState(null);
+
     useEffect(() => {
-        // TODO: run the actual fetch() call: this is just a placeholder for now
-        setTimeout(() => {
-            setRecipes(SAMPLE_RECIPES);
-        }, 500); // sample 500ms delay to simulate a fetch call
+        let cancelled = false;
+
+        fetch("/api/recipes")
+            .then(async (response) => {
+                if (!response.ok) {
+                    const body = await response.json().catch(() => ({}));
+                    throw new Error(body.error ?? "Unable to load recipes.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (!cancelled) setRecipes(data);
+            })
+            .catch((error) => {
+                console.error(error);
+                if (!cancelled) setRecipes([]);
+            });
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     return recipes;
@@ -33,4 +49,83 @@ export async function getRecipe(recipeId) {
     }
 
     return response.json();
+}
+
+async function favoriteRequest(path, method) {
+    const response = await fetch(path, {
+        method,
+        credentials: "include",
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+
+        // For whatever reason, if the user is not authenticated during a given session, such as if the backend is terminated and restarts, the user will get a 401 response and ask to re-login.
+        if (response.status === 401 && method === "GET") {
+            throw new Error("Expired session, unable to get favorites. Please re-login.");
+        }
+        throw new Error(body.error ?? "Unable to manage favorite.");
+    }
+    return body;
+}
+
+export async function getFavorites() {
+    const body = await favoriteRequest("/api/recipes/favorites", "GET");
+    if (!Array.isArray(body.favorites)) {
+        throw new Error("Invalid favorites response.");
+    }
+    return body.favorites;
+}
+
+export async function getFavorite(recipeId) {
+    const body = await favoriteRequest(`/api/recipes/${encodeURIComponent(recipeId)}/favorite`, "GET");
+    return body.favorite;
+}
+
+export async function setFavorite(recipeId, favorite) {
+    const body = await favoriteRequest(
+        `/api/recipes/${encodeURIComponent(recipeId)}/favorite`,
+        favorite ? "PUT" : "DELETE"
+    );
+    return body.favorite;
+}
+
+export async function createRecipe(recipe) {
+    const response = await fetch("/api/recipes", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(recipe)
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(body.error ?? "Unable to add recipe.");
+    }
+
+    return body.recipe;
+}
+
+async function changeRecipe(recipeId, method, recipe) {
+    const response = await fetch(`/api/recipes/${encodeURIComponent(recipeId)}`, {
+        method,
+        credentials: "include",
+        ...(recipe && {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(recipe)
+        })
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(body.error ?? "Unable to modify recipe.");
+    return body;
+}
+
+export function updateRecipe(recipeId, recipe) {
+    return changeRecipe(recipeId, "PUT", recipe);
+}
+
+export function deleteRecipe(recipeId) {
+    return changeRecipe(recipeId, "DELETE");
 }

@@ -29,3 +29,4 @@ Notes about some design decisions I made:
   for the purposes of this assignment. Especially since the AI can make sense of all the units in whatever format.
 - We can add authentication fields to the USER entity later.
 - I'm thinking that the RECIPE instructions can be just plaintext. Maybe we can support Markdown in the future.
+- MongoDB does not support SQL-style foreign keys (as mentioned in lecture). All objects
