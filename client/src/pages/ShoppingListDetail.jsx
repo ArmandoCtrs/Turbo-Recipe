@@ -213,7 +213,13 @@ function ItemDetail({ category, item, onBack }) {
                     {groups.map((group) => (
                         <li key={group.recipeId} style={styles.sourceItem}>
                             <div style={styles.sourceRecipe}>
-                                <Link to={`/recipes/${group.recipeId}`}>{group.recipeName}</Link>
+                                <Link 
+                                    to={`/recipes/${group.recipeId}`}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
+                                    {group.recipeName}
+                                </Link>
                             </div>
                             <ul style={styles.ingredientList}>
                                 {group.lines.map((line) => (
