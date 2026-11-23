@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router";
 
@@ -42,6 +41,12 @@ const styles = {
         overflow: "hidden",
         textOverflow: "ellipsis",
     },
+    metaRow: {
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        gap: 6,
+    },
     metadata: {
         fontSize: 13.6,
         color: "#5b6370",
@@ -55,18 +60,19 @@ const styles = {
     categories: {
         display: "flex",
         flexDirection: "column",
-        gap: 6,
+        gap: 4,
         margin: 0,
         padding: 0,
         listStyle: "none",
     },
     category: {
         display: "flex",
-        flexDirection: "column",
-        gap: 2,
+        alignItems: "baseline",
+        gap: 6,
         minWidth: 0,
     },
     categoryName: {
+        flexShrink: 0,
         fontSize: 13,
         fontWeight: 600,
         color: "#5b6370",
@@ -77,11 +83,6 @@ const styles = {
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-    },
-    indicators: {
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 6,
     },
     indicator: {
         padding: "2px 10px",
@@ -114,7 +115,7 @@ function formatDate(date) {
     });
 }
 
-export function ShoppingListCard({ shoppingList, user }) {
+export function ShoppingListCard({ shoppingList }) {
     const [hovered, setHovered] = useState(false);
 
     const {
@@ -129,8 +130,6 @@ export function ShoppingListCard({ shoppingList, user }) {
         unparsed = [],
         notes = [],
     } = contents;
-
-    const handle = user?.username ?? shoppingList.user;
 
     const totalItems = categories.reduce(
         (total, category) => total + category.items.length,
@@ -152,9 +151,21 @@ export function ShoppingListCard({ shoppingList, user }) {
         >
             <div style={styles.heading}>
                 <h3 style={styles.name}>{name}</h3>
-                <span style={styles.metadata}>
-                    {formatDate(createdAt)} · @{handle}
-                </span>
+                <div style={styles.metaRow}>
+                    <span style={styles.metadata}>{formatDate(createdAt)}</span>
+
+                    {unparsed.length > 0 && (
+                        <span style={styles.indicator}>
+                            {unparsed.length} unparsed
+                        </span>
+                    )}
+
+                    {notes.length > 0 && (
+                        <span style={styles.indicator}>
+                            {notes.length} {notes.length === 1 ? "note" : "notes"}
+                        </span>
+                    )}
+                </div>
             </div>
 
             <div style={styles.summary}>
@@ -182,7 +193,7 @@ export function ShoppingListCard({ shoppingList, user }) {
                         return (
                             <li key={category.name} style={styles.category}>
                                 <span style={styles.categoryName}>
-                                    {category.name}
+                                    {category.name}:
                                 </span>
 
                                 <span style={styles.items}>
@@ -199,22 +210,6 @@ export function ShoppingListCard({ shoppingList, user }) {
                         </li>
                     )}
                 </ul>
-            )}
-
-            {(unparsed.length > 0 || notes.length > 0) && (
-                <div style={styles.indicators}>
-                    {unparsed.length > 0 && (
-                        <span style={styles.indicator}>
-                            {unparsed.length} unparsed
-                        </span>
-                    )}
-
-                    {notes.length > 0 && (
-                        <span style={styles.indicator}>
-                            {notes.length} {notes.length === 1 ? "note" : "notes"}
-                        </span>
-                    )}
-                </div>
             )}
         </Link>
     );
