@@ -1,10 +1,14 @@
+import { Link } from "react-router";
+import { Layout } from "../components/Layout";
+
 export function NotFound() {
     return (
-        <div>
-            <p>404 - Page Not Found</p>
+        <Layout>
+            <h1>404: Page Not Found</h1>
+            <p>We couldn't find that page.</p>
             <p>
-                <a href="/">Return home?</a>
+                <Link to="/">Return home?</Link>
             </p>
-        </div>
+        </Layout>
     );
 }

@@ -194,3 +194,47 @@ select {
   display: block;
   margin-bottom: 15px
 }
+
+.create-shopping-list-navigate-button {
+    cursor: pointer;
+    padding: 12px 0;
+    font-family: "Lexend";
+    font-weight: bold;
+    font-size: 1.3em;
+    color: var(--text);
+    text-transform: uppercase;
+    background: none;
+    outline: none;
+    border: 2px dashed rgb(136, 133, 158);
+    border-radius: 8px;
+
+    transition: background-color 0.1s ease;
+}
+
+.create-shopping-list-navigate-button:hover {
+    background-color: rgb(236, 235, 239);
+}
+
+.create-shopping-list-button {
+    margin-top: 16px;
+    cursor: pointer;
+    padding: 12px 0;
+    font-family: "Lexend";
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--text);
+    text-transform: uppercase;
+    background: rgb(250, 231, 223);
+    outline: none;
+    border: 2px solid rgb(114, 93, 91);
+    border-radius: 8px;
+}
+
+.create-shopping-list-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.shopping-list-header {
+    font-size: 1.45em !important;
+}

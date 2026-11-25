@@ -181,5 +181,370 @@
       "1 tsp dried oregano"
     ],
     "instructions": "Combine the tomatoes, cucumber, red onion, and olives in a large bowl. Whisk the olive oil, vinegar, and oregano together and pour over the salad. Toss gently, top with the feta, and serve."
+  },
+  {
+    "id": "r11",
+    "name": "Lemon Herb Roast Chicken",
+    "author": "chefdave",
+    "tags": [
+      "chicken",
+      "dinner",
+      "roast",
+      "gluten-free"
+    ],
+    "description": "Crispy-skinned roast chicken with lemon, garlic, and thyme.",
+    "ingredients": [
+      "1 whole chicken (about 1.8kg)",
+      "juice of 1 lemon",
+      "1 lemon, sliced",
+      "1 head garlic, halved crosswise",
+      "3 tbsp butter, softened",
+      "2 tbsp olive oil",
+      "4 sprigs fresh thyme",
+      "1 large onion, quartered",
+      "2 carrots, cut into chunks",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Preheat the oven to 220C (425F). Pat the chicken dry and rub it all over with the butter and olive oil, then season generously with salt and pepper. Stuff the cavity with the lemon slices, half of the garlic, and the thyme. Scatter the onion, carrots, and remaining garlic in a roasting pan, set the chicken on top, and roast for about 1 hour 15 minutes until the juices run clear. Rest for 15 minutes, then squeeze the lemon juice over the top before carving."
+  },
+  {
+    "id": "r12",
+    "name": "Margherita Pizza",
+    "author": "maria_cooks",
+    "tags": [
+      "italian",
+      "pizza",
+      "vegetarian",
+      "dinner"
+    ],
+    "description": "Simple homemade pizza with a bright tomato sauce and fresh mozzarella.",
+    "ingredients": [
+      "1 ball (500g) pizza dough",
+      "1 can (400g) crushed tomatoes",
+      "2 cloves garlic, minced",
+      "2 tbsp olive oil",
+      "1 tsp dried oregano",
+      "250g fresh mozzarella, sliced",
+      "a handful of fresh basil leaves",
+      "flour for dusting",
+      "salt to taste"
+    ],
+    "instructions": "Preheat the oven to 250C (475F) with a baking sheet inside. Simmer the tomatoes with the garlic, half of the olive oil, oregano, and a pinch of salt for 10 minutes. Stretch the dough on a floured surface, spread with the sauce, and top with the mozzarella. Bake for 10 to 12 minutes until the crust is blistered and golden. Finish with the basil and a drizzle of the remaining oil."
+  },
+  {
+    "id": "r13",
+    "name": "Smoky Shakshuka",
+    "author": "veggie_priya",
+    "tags": [
+      "vegetarian",
+      "breakfast",
+      "middle-eastern",
+      "gluten-free"
+    ],
+    "description": "Eggs poached in a smoky, spiced tomato and pepper sauce.",
+    "ingredients": [
+      "2 tbsp olive oil",
+      "1 large onion, diced",
+      "1 red bell pepper, diced",
+      "3 cloves garlic, minced",
+      "1 tsp cumin",
+      "1 tsp smoked paprika",
+      "a pinch of cayenne pepper",
+      "1 can (800g) crushed tomatoes",
+      "6 large eggs",
+      "100g feta cheese, crumbled",
+      "1/2 bunch fresh cilantro, chopped",
+      "salt to taste"
+    ],
+    "instructions": "Heat the oil in a large, deep skillet and saute the onion and pepper for 8 minutes. Add the garlic, cumin, paprika, and cayenne and cook for 1 minute. Pour in the tomatoes, season with salt, and simmer for 10 minutes. Make 6 small wells in the sauce, crack an egg into each, cover, and cook for 6 to 8 minutes until the whites are set. Top with the feta and cilantro and serve with bread."
+  },
+  {
+    "id": "r14",
+    "name": "Walnut Banana Bread",
+    "author": "bakerjen",
+    "tags": [
+      "baking",
+      "breakfast",
+      "dessert",
+      "vegetarian"
+    ],
+    "description": "Moist, golden banana bread with a handful of walnuts.",
+    "ingredients": [
+      "3 ripe bananas, mashed",
+      "1/3 cup butter, melted",
+      "3/4 cup brown sugar",
+      "1 large egg",
+      "1 tsp vanilla extract",
+      "1 tsp baking soda",
+      "a pinch of salt",
+      "1 1/2 cups all-purpose flour",
+      "1/2 cup chopped walnuts",
+      "butter for greasing the pan"
+    ],
+    "instructions": "Preheat the oven to 175C (350F) and grease a loaf pan. Mix the mashed bananas with the melted butter, then stir in the brown sugar, egg, and vanilla. Sprinkle the baking soda and salt over the batter, then fold in the flour until just combined. Fold in the walnuts, pour into the pan, and bake for 55 to 60 minutes until a toothpick comes out clean."
+  },
+  {
+    "id": "r15",
+    "name": "Shrimp Fried Rice",
+    "author": "maria_cooks",
+    "tags": [
+      "asian",
+      "seafood",
+      "dinner",
+      "quick"
+    ],
+    "description": "Better than takeout, and a great way to use up leftover rice.",
+    "ingredients": [
+      "3 cups cooked rice, cold",
+      "300g shrimp, peeled and deveined",
+      "3 large eggs, beaten",
+      "1 cup frozen peas",
+      "3 scallions, sliced",
+      "2 cloves garlic, minced",
+      "3 tbsp soy sauce",
+      "1 tbsp sesame oil",
+      "2 tbsp vegetable oil"
+    ],
+    "instructions": "Heat 1 tablespoon of the vegetable oil in a wok over high heat and cook the shrimp for 2 minutes per side, then remove. Add the remaining vegetable oil and scramble the eggs. Add the garlic and peas and cook for 1 minute, then add the rice and stir-fry for 3 minutes, breaking up any clumps. Return the shrimp, add the soy sauce and sesame oil, and toss. Top with the scallions."
+  },
+  {
+    "id": "r16",
+    "name": "Creamy Tomato Soup",
+    "author": "veggie_priya",
+    "tags": [
+      "vegetarian",
+      "soup",
+      "lunch",
+      "dinner"
+    ],
+    "description": "Velvety tomato soup that pairs perfectly with a grilled cheese.",
+    "ingredients": [
+      "2 tbsp butter",
+      "1 cup chopped onion",
+      "3 cloves garlic, minced",
+      "1 can (800g) crushed tomatoes",
+      "2 cups vegetable broth",
+      "1/2 cup heavy cream",
+      "1 tsp sugar",
+      "four fresh basil leaves",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Melt the butter in a large pot and cook the onion for 6 to 8 minutes until soft. Add the garlic and cook for 1 minute. Stir in the tomatoes, broth, and sugar and simmer for 20 minutes. Blend until smooth, stir in the cream, and season with salt and pepper. Serve topped with the torn basil."
+  },
+  {
+    "id": "r17",
+    "name": "Chicken Caesar Salad",
+    "author": "chefdave",
+    "tags": [
+      "salad",
+      "chicken",
+      "lunch",
+      "dinner"
+    ],
+    "ingredients": [
+      "2 boneless chicken breasts",
+      "1 tbsp olive oil",
+      "1 head romaine lettuce, chopped",
+      "1/2 cup grated parmesan",
+      "1 cup croutons",
+      "1/4 cup Caesar dressing",
+      "juice of 1 lemon",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Season the chicken with salt and pepper and cook in the olive oil in a skillet for 6 to 7 minutes per side until cooked through. Rest for 5 minutes, then slice. Toss the romaine with the dressing and lemon juice, then top with the chicken, parmesan, and croutons."
+  },
+  {
+    "id": "r18",
+    "name": "Cold Peanut Noodles",
+    "author": "veggie_priya",
+    "tags": [
+      "vegan",
+      "asian",
+      "quick",
+      "dinner"
+    ],
+    "description": "Sesame-peanut noodles loaded with crunchy vegetables.",
+    "ingredients": [
+      "250g rice noodles",
+      "3 tbsp peanut butter",
+      "2 tbsp soy sauce",
+      "1 tbsp maple syrup",
+      "1 tbsp lime juice",
+      "1 tbsp sesame oil",
+      "1 clove garlic, minced",
+      "1 carrot, julienned",
+      "1 cucumber, sliced",
+      "2-3 green onions, sliced",
+      "2 tbsp chopped cilantro",
+      "red pepper flakes, to taste"
+    ],
+    "instructions": "Cook the noodles according to the package directions, then rinse under cold water and drain well. Whisk the peanut butter, soy sauce, maple syrup, lime juice, sesame oil, and garlic with 2 to 3 tablespoons of warm water until smooth. Toss the noodles with the sauce, carrot, and cucumber. Top with the green onions, cilantro, and red pepper flakes."
+  },
+  {
+    "id": "r19",
+    "name": "Stovetop Mac and Cheese",
+    "author": "bakerjen",
+    "tags": [
+      "pasta",
+      "vegetarian",
+      "dinner",
+      "comfort-food"
+    ],
+    "description": "Ultra-creamy mac and cheese made from scratch in one pot.",
+    "ingredients": [
+      "250g elbow macaroni",
+      "3 tbsp butter",
+      "3 tbsp all-purpose flour",
+      "2 cups milk",
+      "2 cups shredded cheddar cheese",
+      "1/2 cup grated parmesan",
+      "1/2 tsp smoked paprika",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Cook the macaroni until al dente and drain. In the same pot, melt the butter, whisk in the flour, and cook for 1 minute. Slowly whisk in the milk and simmer for 5 minutes until thickened. Remove from the heat and stir in the cheddar, parmesan, and paprika until melted. Season with salt and pepper, then fold in the macaroni."
+  },
+  {
+    "id": "r20",
+    "name": "Black Bean Quesadillas",
+    "author": "chefdave",
+    "tags": [
+      "mexican",
+      "vegetarian",
+      "lunch",
+      "quick"
+    ],
+    "ingredients": [
+      "1 can (400g) black beans, drained",
+      "4 large flour tortillas",
+      "1 1/2 cups shredded cheddar cheese",
+      "1 red bell pepper, diced",
+      "1 tsp cumin",
+      "juice of 1 lime",
+      "1/2 cup sour cream",
+      "2 tbsp chopped cilantro",
+      "cooking spray"
+    ],
+    "instructions": "Mash half of the beans with the cumin and lime juice, then stir in the remaining beans and the bell pepper. Spread the mixture over half of each tortilla, top with cheese, and fold over. Cook in a skillet sprayed with cooking spray for 2 to 3 minutes per side until golden and crisp. Serve with the sour cream and cilantro."
+  },
+  {
+    "id": "r21",
+    "name": "Creamy Mushroom Risotto",
+    "author": "maria_cooks",
+    "tags": [
+      "italian",
+      "vegetarian",
+      "dinner"
+    ],
+    "description": "Creamy arborio rice with earthy mushrooms and parmesan.",
+    "ingredients": [
+      "1 1/2 cups arborio rice",
+      "250g cremini mushrooms, sliced",
+      "4 cups vegetable broth, kept warm",
+      "1/2 cup dry white wine",
+      "1 small onion, finely diced",
+      "2-3 cloves garlic, minced",
+      "50g butter",
+      "2 tbsp olive oil",
+      "1/2 cup grated parmesan",
+      "2 tbsp chopped parsley",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Saute the mushrooms in 1 tablespoon of the olive oil until browned, then set aside. Cook the onion in the remaining oil and half of the butter until soft, add the garlic, then stir in the rice for 1 minute. Add the wine and stir until absorbed. Add the warm broth one ladle at a time, stirring often, for about 20 minutes until the rice is creamy. Stir in the mushrooms, remaining butter, parmesan, and parsley, and season to taste."
+  },
+  {
+    "id": "r22",
+    "name": "Cinnamon Apple Crumble",
+    "author": "bakerjen",
+    "tags": [
+      "dessert",
+      "baking",
+      "vegetarian"
+    ],
+    "description": "Warm cinnamon apples under a buttery oat topping.",
+    "ingredients": [
+      "6 large apples, peeled and sliced",
+      "1 tbsp lemon juice",
+      "1/4 cup granulated sugar",
+      "1 tsp cinnamon",
+      "3/4 cup all-purpose flour",
+      "1/2 cup rolled oats",
+      "1/2 cup brown sugar",
+      "1 stick butter, cold and cubed",
+      "a pinch of salt",
+      "vanilla ice cream for serving"
+    ],
+    "instructions": "Preheat the oven to 180C (350F). Toss the apples with the lemon juice, granulated sugar, and cinnamon in a baking dish. Rub the butter into the flour, oats, brown sugar, and salt until crumbly, then scatter over the apples. Bake for 40 to 45 minutes until golden and bubbling. Serve warm with vanilla ice cream."
+  },
+  {
+    "id": "r23",
+    "name": "Spaghetti and Meatballs",
+    "author": "chefdave",
+    "tags": [
+      "italian",
+      "pasta",
+      "beef",
+      "dinner"
+    ],
+    "description": "Tender baked meatballs in a simple marinara.",
+    "ingredients": [
+      "1 lb ground beef",
+      "1 large egg",
+      "1/2 cup breadcrumbs",
+      "1/4 cup grated parmesan",
+      "3 cloves garlic, minced",
+      "2 tbsp chopped parsley",
+      "1 tsp dried oregano",
+      "1 tbsp olive oil",
+      "1 jar (24 oz) marinara sauce",
+      "400g spaghetti",
+      "salt and pepper to taste"
+    ],
+    "instructions": "Mix the beef, egg, breadcrumbs, parmesan, garlic, parsley, oregano, salt, and pepper, then roll into about 16 meatballs. Brown them in the olive oil in a large skillet, pour in the marinara, and simmer covered for 15 minutes until cooked through. Meanwhile, cook the spaghetti until al dente. Toss with the sauce and serve with the meatballs on top."
+  },
+  {
+    "id": "r24",
+    "name": "Berry Overnight Oats",
+    "author": "veggie_priya",
+    "tags": [
+      "vegetarian",
+      "breakfast",
+      "quick",
+      "no-cook"
+    ],
+    "description": "A make-ahead breakfast that is ready when you wake up.",
+    "ingredients": [
+      "1 cup rolled oats",
+      "1 cup milk",
+      "1/2 cup plain yogurt",
+      "1 tbsp maple syrup",
+      "1/2 tsp vanilla extract",
+      "1 tbsp chia seeds",
+      "1/2 cup frozen blueberries"
+    ],
+    "instructions": "Stir the oats, milk, yogurt, maple syrup, vanilla, and chia seeds together in a jar, then fold in the blueberries. Cover and refrigerate overnight, or at least 6 hours. Stir and serve cold, adding a splash more milk if it is too thick."
+  },
+  {
+    "id": "r25",
+    "name": "Veggie Egg Muffins",
+    "author": "maria_cooks",
+    "tags": [
+      "breakfast",
+      "vegetarian",
+      "meal-prep",
+      "gluten-free"
+    ],
+    "description": "Grab-and-go breakfast cups, perfect for meal prep.",
+    "ingredients": [
+      "a dozen eggs",
+      "1/2 cup milk",
+      "2 cups fresh baby spinach",
+      "1/2 red bell pepper, diced",
+      "3 green onions, chopped",
+      "1 cup shredded cheddar cheese",
+      "100g feta cheese, crumbled",
+      "salt and pepper to taste",
+      "cooking spray"
+    ],
+    "instructions": "Preheat the oven to 175C (350F) and spray a 12-cup muffin tin. Whisk the eggs with the milk, salt, and pepper. Divide the spinach, bell pepper, green onions, cheddar, and feta among the cups, then pour in the egg mixture. Bake for 20 to 22 minutes until set."
   }
 ]

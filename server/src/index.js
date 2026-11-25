@@ -1,25 +1,35 @@
 import path from "path";
 import { readFileSync } from "fs";
+import { GoogleGenAI } from '@google/genai';
 import express from "express";
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import fs from "fs";//for reading the sample user database
+import { createShoppingList, resolveRecipes } from "./shopping-list/index.js";
+
+process.loadEnvFile("../.env");
+
+if (!(process.env.SESSION_SECRET && process.env.LLM_API_KEY)) {
+    throw new Error(".env file not properly configured. See .env.example for additional information");
+}
 
 const app = express();
+const ai = new GoogleGenAI({ 
+    apiKey: process.env.LLM_API_KEY,
+    apiVersion: "v1beta"
+});
 
 // Parse request bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 // Configure sessions
 app.use(session({
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
-
 
 // Login route
 app.post("/login", (req, res) => {
@@ -45,7 +55,8 @@ app.post("/login", (req, res) => {
         id: user.id,
         username: user.username,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        favorites: user.favorites,
     };
 
     res.json({
@@ -78,29 +89,129 @@ app.post('/logout', (req, res) => {
 const isProd = !process.argv.includes("--dev");
 const clientDist = path.resolve(import.meta.dirname, "../../client/dist");
 const recipesPath = path.resolve(import.meta.dirname, "../../sample_data/recipes.json");
-const recipes = JSON.parse(readFileSync(recipesPath, "utf8"));
+
+// TODO: remove this once you set up mongo
+const RECIPES = JSON.parse(readFileSync(recipesPath, "utf8"));
+const SHOPPING_LISTS = [];
 
 app.get("/api/ping", (req, res) => {
     res.json({ message: "up", timestamp: Date.now() });
+});
+
+app.get("/api/recipes", (req, res) => {
+    res.json(RECIPES);
 });
 
 // From Albert: Added an endpoint for recipe fetches by ID, 
 // allowing requests such as GET /api/recipes/r1 (the Classic Spaghetti Carbonara) possible.
 // After verifying with CoPilot that RecipeDetail correctly uses the new useRecipes() function in the API module, I asked it to help design the corresponding backend endpoint.
 app.get("/api/recipes/:recipeId", (req, res) => {
-    const recipe = recipes.find((item) => item.id === req.params.recipeId);
+    const recipe = RECIPES.find((item) => item.id === req.params.recipeId);
 
     // Returns 404 if the recipe ID isn't found, otherwise, returns the recipe as JSON.
     if (!recipe) {
-        return res.status(404).json({ error: "Recipe not found." });
+        return res.status(404).json({ message: "Recipe not found." });
     }
 
     res.json(recipe);
 });
 
+
+// Create a new shopping list
+app.post("/api/users/:userId/shopping-lists/new", async (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    try {
+        const name = typeof req.body.name === "string" ? req.body.name.trim() : "";
+        if (!name || name.length > 100) {
+            return res.status(400).json({ message: "A list name (max 100 characters) is required" });
+        }
+
+        let selected;
+        
+        try {
+            selected = resolveRecipes(req.body.recipes, RECIPES);
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json({ message: "Invalid list of recipes" })
+        }
+        
+        const lst = await createShoppingList(selected, ai);
+
+        const shoppingList = {
+            id: Math.random().toString(36).slice(2),
+            name: name,
+            user: req.session.user.id,
+            createdAt: Date.now(),
+            contents: lst,
+        }
+        SHOPPING_LISTS.push(shoppingList);
+        res.json(shoppingList);
+    } catch (err) {
+        console.error(err);
+        res.status(err.status ?? 500)
+            .json({ 
+                message: err.status ? err.message : "Something went wrong" 
+            });
+    }
+});
+
+// Delete a shopping list
+app.delete("/api/users/:userId/shopping-lists/:listId", (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const i = SHOPPING_LISTS.findIndex(lst =>
+        lst.id === req.params.listId &&
+        lst.user === req.session.user.id
+    );
+
+    if (i !== -1) {
+        SHOPPING_LISTS.splice(i, 1);
+        res.json({ message: "Success" });
+    } else {
+        res.status(404).send({ message: "Not found" });
+    }
+});
+
+// Get all user's shopping lists
+app.get("/api/users/:userId/shopping-lists", (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    res.json(SHOPPING_LISTS.filter(lst => {
+        return lst.user === req.session.user.id;
+    }));
+});
+
+// Get just one shopping list
+app.get("/api/users/:userId/shopping-lists/:listId", (req, res) => {
+    if (!req.session.user || req.session.user.id !== req.params.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const shoppingList = SHOPPING_LISTS.find(lst => {
+        return lst.id === req.params.listId;
+    });
+
+    if (!shoppingList) {
+        return res.status(404).json({ message: 'Not found' });
+    }
+
+    if (shoppingList.user !== req.session.user.id) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    res.json(shoppingList);
+});
+
 // from mike: unknown /api/* paths should 404 as JSON, not fall through to index.html
 app.use("/api", (req, res) => {
-    res.status(404).json({ error: "Not found." });
+    res.status(404).json({ message: "Not found." });
 });
 
 if (isProd) {

@@ -8,6 +8,7 @@ USER:
 - Username     (str)
 - First name   (str)
 - Last name    (str)
+- Favorites    (RECIPE[] id)
 
 RECIPE:
 - ID
@@ -20,8 +21,29 @@ RECIPE:
 
 SHOPPING LIST:
 - ID
+- Name         (str)
 - User         (USER id)
-- Recipes      (RECIPE[] id)
+- Created at   (date)
+- Contents     (JSON)
+
+
+SHOPPING LIST JSON SCHEMA:
+{
+    categories: {
+        name: str,
+        items: {
+            item: str,
+            quantity: str,
+            approximate: bool,
+            recipes: str[],      // the source recipes
+            sources: str[],      // the source ingredient descriptions within the recipes that apply to this item
+        }[]
+    }[],
+    unparsed: str[],
+    notes: str[]
+}
+
+
 
 ======
 Notes about some design decisions I made:
