@@ -1,47 +1,63 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { Layout } from "../components/Layout";
 
+const label = { display: "block", marginBottom: "1.25rem" };
+
+const sampleRecipe = {
+    title: "Weeknight Chili",
+    ingredients: "Beans\nTomatoes\nOnion",
+    steps: "Chop the onion\nSimmer for 30 minutes",
+};
+
 export function AddRecipe() {
-    const [title, setTitle] = useState("");
-    const [ingredients, setIngredients] = useState("");
-    const [instructions, setInstructions] = useState("");
+    const { id } = useParams();
+    const isEditing = Boolean(id);
+    
+    const [title, setTitle] = useState(isEditing ? sampleRecipe.title : "");
+    const [ingredients, setIngredients] = useState(isEditing ? sampleRecipe.ingredients : "");
+    const [instructions, setInstructions] = useState(isEditing ? sampleRecipe.instructions : "");
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log({ title, ingredients, instructions });
-
+         if (isEditing) {
+            console.log("Update recipe", { id, title, ingredients, instructions });
+        } else {
+            console.log("Create recipe", { title, ingredients, instructions });
+        }
     };
 
     return (
         <Layout>
-            <h1>Add Recipe</h1>
+            <h1>{isEditing ? "Edit Recipe" : "Add Recipe"}</h1>
             <form onSubmit={handleSubmit}>
-                <p>
+                 <label style={label}>
                     Title
+                    <br />
                     <input
-                        style={{ display: "block" }}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
                     />
-                </p>
-                <p>
+                </label>
+                <label style={label}>
                     Ingredients
+                    <br />
                     <textarea
-                        style={{ display: "block" }}
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
                     />
-                </p>
-                <p>
-                    Instructions
+                </label>
+                <label style={label}>
+                    Steps
+                    <br />
                     <textarea
-                        style={{ display: "block" }}
-                        value={instructions}
-                        onChange={(e) => setInstructions(e.target.value)}
+                        value={steps}
+                        onChange={(e) => setSInstructions(e.target.value)}
                     />
-                </p>
-                <button type="submit">Save recipe</button>
+                </label>
+                <button type="submit">
+                    {isEditing ? "Save changes" : "Save recipe"}
+                </button>
             </form>
         </Layout>
     );
